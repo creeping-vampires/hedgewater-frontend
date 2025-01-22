@@ -1,0 +1,183 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --win-title-active: linear-gradient(180deg, #0058ee 0%, #3593ff 4%, #288eff 8%, #127dff 40%, #036ffc 88%, #0262ee 93%, #0057e5 100%);
+  --win-title-inactive: linear-gradient(180deg, #7697e7 0%, #7b9ce3 3%, #6c91dc 7%, #6389d5 90%, #5c83d0 100%);
+  --win-bg: #ece9d8;
+  --win-border: #848484;
+  --taskbar-bg: linear-gradient(180deg, #245edc 0%, #2457dc 100%);
+}
+
+body {
+  background-color: #3f7f7f;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.window {
+  @apply bg-[#d4d0c8] overflow-hidden;
+  border: 1px solid var(--win-border);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.window.maximized {
+  width: 100vw !important;
+  height: calc(100vh - 30px) !important;
+  top: 0;
+  left: 0;
+  transform: none;
+}
+
+.window-title {
+  background: var(--win-title-active);
+  @apply text-white px-1.5 py-0.5 flex items-center justify-between select-none cursor-move;
+  height: 20px;
+}
+
+.window-title.inactive {
+  background: var(--win-title-inactive);
+}
+
+.window-title span {
+  @apply text-xs;
+}
+
+.window-content {
+  background: var(--win-bg);
+  @apply p-4;
+  height: calc(100% - 40px); /* 20px title + 20px status */
+  overflow: auto;
+}
+
+.status-bar {
+  @apply bg-[#d4d0c8] flex justify-between items-center px-2 py-1 text-xs border-t border-[#848484];
+  height: 20px;
+}
+
+.metric-box {
+  @apply flex flex-col;
+  border: 1px solid var(--win-border);
+  padding: 4px;
+  background: #d4d0c8;
+}
+
+.metric-label {
+  @apply text-center font-semibold py-1 text-sm;
+}
+
+.metric-value {
+  @apply text-center bg-black text-green-500 py-1 font-mono text-lg;
+}
+
+.table-container {
+  @apply bg-white border border-[#848484];
+}
+
+.table-header {
+  @apply bg-[#d4d0c8] text-left font-semibold px-4 py-1 border-b border-[#848484] text-sm;
+}
+
+.table-cell {
+  @apply px-4 py-1 border-b border-[#848484] text-sm;
+}
+
+.chart-container {
+  @apply bg-[#d4d0c8] p-2 border border-[#848484];
+}
+
+.chart-title {
+  @apply text-sm font-semibold mb-2 px-2;
+}
+
+.category-box {
+  @apply bg-white p-2 border border-[#848484];
+}
+
+.minimize-button, .maximize-button, .close-button {
+  @apply flex items-center justify-center text-black;
+  width: 16px;
+  height: 14px;
+  margin: 2px;
+  background: linear-gradient(180deg, #fff 0%, #ecebe5 50%, #e3e2dd 50%, #e3e2dd 100%);
+  border-width: 1px;
+  border-style: solid;
+  border-color: #fff #404040 #404040 #fff;
+  box-shadow: 1px 1px 0 #dfdfdf inset, -1px -1px 0 #808080 inset;
+}
+
+.minimize-button:hover, .maximize-button:hover {
+  background: #e3e2dd;
+}
+
+.close-button {
+  background: linear-gradient(180deg, #f1f1ef 0%, #e3e2dd 50%, #d6d2c9 50%, #d6d2c9 100%);
+}
+
+.close-button:hover {
+  background: #f1707a;
+  border-color: #8b0e14;
+  color: white;
+}
+
+.window-button-icon {
+  @apply flex items-center justify-center text-[10px] font-bold leading-none;
+  height: 12px;
+  width: 12px;
+  margin-top: -1px;
+}
+
+.taskbar {
+  @apply fixed bottom-0 left-0 right-0 flex items-center px-1 gap-2;
+  height: 30px;
+  background: var(--taskbar-bg);
+  border-top: 1px solid #fff;
+}
+
+.taskbar-item {
+  @apply flex items-center gap-2 px-2 text-white text-sm;
+  height: 24px;
+  background: linear-gradient(180deg, #3c8b27 0%, #2d6b1e 100%);
+  border: 1px solid #245edc;
+  border-radius: 5px;
+  min-width: 160px;
+}
+
+.taskbar-item.active {
+  background: linear-gradient(180deg, #4ca332 0%, #367824 100%);
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.start-button {
+  @apply flex items-center gap-2 px-2 text-white font-semibold;
+  height: 24;
+  background: linear-gradient(180deg, #3c8b27 0%, #2d6b1e 100%);
+  border: 1px solid #245edc;
+  border-radius: 5px;
+}
+
+.start-button:hover {
+  background: linear-gradient(180deg, #4ca332 0%, #367824 100%);
+}
+
+.desktop-icon {
+  @apply flex flex-col items-center justify-center text-white text-sm cursor-pointer p-2 rounded hover:bg-white/10;
+  width: 120px;
+  height: 120px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.desktop-icon:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.clock {
+  @apply text-white px-2 text-sm;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+}
