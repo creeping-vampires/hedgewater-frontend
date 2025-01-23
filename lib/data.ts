@@ -50,7 +50,7 @@ export const fundsData: FundDetails[] = [
       {
         symbol: "HWTR",
         quantity: 2623820,
-        initialValue: 0,
+        initialValue: 15100,
         currentValue: 0,
         pnl: 0,
         roi: 0,
