@@ -1,14 +1,13 @@
 "use client";
 
 import { fundsData } from "@/lib/data";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
+import { getPnl, getRoi } from "@/lib/utils";
 
 export function useFetchData() {
   // asset symbol to info mapping
-  const [data, setData] = useState({});
-
-  const dexscreenerAPI = ``;
+  const [data, setData] = useState<{ [key: string]: number }>({});
 
   var body = JSON.stringify({
     type: "tokenDetails",
@@ -47,6 +46,7 @@ export function useFetchData() {
           preparedData[asset.symbol] = results[index]?.midPx;
         });
         preparedData["USDC"] = 1;
+        // todo: fix hfun token price in the future
         preparedData["HWTR"] = 12.07504;
 
         setData(preparedData);
@@ -59,5 +59,44 @@ export function useFetchData() {
     fetchData();
   }, []);
 
-  return data;
+  //
+  const totals = useMemo(() => {
+    // calculate total assets
+    // total asset count
+    // total invested USD
+    // total current USD
+    // total PnL
+    // total ROI
+
+    const totalAssets = fundsData[0].assets.reduce((acc, asset) => acc + 1, 0);
+
+    const totalInvestedUSD = fundsData[0].assets.reduce(
+      (acc, asset) => acc + asset.initialValue,
+      0
+    );
+
+    const totalCurrentUSD = fundsData[0].assets.reduce((acc, asset) => {
+      const price = data[asset.symbol] === undefined ? 0 : data[asset.symbol];
+
+      console.log("total price ", price);
+      const currentValue = price * asset.quantity;
+      return acc + currentValue;
+    }, 0);
+
+    console.log("total current ", totalCurrentUSD);
+
+    const totalPnL = getPnl(totalInvestedUSD, totalCurrentUSD);
+
+    const totalROI = getRoi(totalInvestedUSD, totalCurrentUSD);
+
+    return {
+      totalAssets,
+      totalInvestedUSD,
+      totalCurrentUSD,
+      totalPnL,
+      totalROI,
+    };
+  }, [data]);
+
+  return { assetPrices: data, totals };
 }

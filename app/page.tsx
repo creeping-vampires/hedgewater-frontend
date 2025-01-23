@@ -5,7 +5,8 @@ import { Monitor } from "lucide-react";
 import { ResponsiveChart } from "@/components/ResponsiveChart";
 import { FundDetails, fundsData } from "@/lib/data";
 import { useFetchData } from "@/hooks/useFetchData";
-import { getPnl, getRoi } from "@/lib/utils";
+import { formatUnits, getPnl, getRoi } from "@/lib/utils";
+import { format } from "node:path";
 
 const returnsData = [
   { date: "1/07", value: -5 },
@@ -37,9 +38,9 @@ export default function Dashboard() {
   const [openWindows, setOpenWindows] = useState<string[]>(["dashboard"]);
   const [fundWindowMaximized, setFundWindowMaximized] = useState(true);
 
-  const data: any = useFetchData();
+  const { assetPrices, totals } = useFetchData();
 
-  console.log("data", data);
+  console.log("data", { assetPrices });
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -246,19 +247,25 @@ export default function Dashboard() {
             <div className="grid grid-cols-4 gap-4 mb-4">
               <div className="metric-box">
                 <div className="metric-label">TOTAL AUM</div>
-                <div className="metric-value">$125.7M</div>
+                <div className="metric-value">
+                  {formatCurrency(totals.totalInvestedUSD)}
+                </div>
               </div>
               <div className="metric-box">
                 <div className="metric-label">TOTAL ASSETS</div>
-                <div className="metric-value">47</div>
+                <div className="metric-value">{totals.totalAssets}</div>
               </div>
               <div className="metric-box">
                 <div className="metric-label">YTD ROI</div>
-                <div className="metric-value">+18.5%</div>
+                <div className="metric-value">
+                  {totals.totalROI.toFixed(2)}%
+                </div>
               </div>
               <div className="metric-box">
                 <div className="metric-label">TODAY&apos;S PNL</div>
-                <div className="metric-value">$234.3K</div>
+                <div className="metric-value">
+                  {formatUnits(totals.totalPnL)}
+                </div>
               </div>
             </div>
 
@@ -268,26 +275,54 @@ export default function Dashboard() {
                 <thead>
                   <tr>
                     <th className="table-header">FUND</th>
-                    <th className="table-header">MTD</th>
+                    <th className="table-header">Invested</th>
+                    <th className="table-header">Current Value</th>
                     <th className="table-header">LAST MONTH</th>
-                    <th className="table-header">YTD</th>
-                    <th className="table-header">LTD</th>
+                    <th className="table-header">PNL</th>
+                    {/* <th className="table-header">LTD</th> */}
                   </tr>
                 </thead>
                 <tbody>
-                  {fundsData.map((fund) => (
-                    <tr
-                      key={fund.name}
-                      className="hover:bg-blue-100 cursor-pointer"
-                      onClick={() => openFundDetails(fund)}
-                    >
-                      <td className="table-cell">{fund.name}</td>
-                      <td className="table-cell text-red-500">-1.35%</td>
-                      <td className="table-cell text-red-500">-1.35%</td>
-                      <td className="table-cell text-red-500">-1.35%</td>
-                      <td className="table-cell text-green-500">+7.29%</td>
-                    </tr>
-                  ))}
+                  {fundsData.map((fund: any) => {
+                    if (fund.name === "Genesis I") {
+                      return (
+                        <tr
+                          key={fund.name}
+                          className="hover:bg-blue-100 cursor-pointer"
+                          onClick={() => openFundDetails(fund)}
+                        >
+                          <td className="table-cell">{fund.name}</td>
+                          <td className="table-cell text-green-600">
+                            {formatCurrency(totals.totalInvestedUSD)}
+                          </td>
+                          <td className="table-cell text-green-600">
+                            {formatCurrency(totals.totalCurrentUSD)}
+                          </td>
+                          <td className="table-cell text-green-600">
+                            {formatCurrency(totals.totalCurrentUSD)}
+                          </td>
+                          <td className="table-cell text-green-600">
+                            {formatCurrency(totals.totalPnL)}
+                          </td>
+                          {/* <td className="table-cell text-green-500">+7.29%</td> */}
+                        </tr>
+                      );
+                    }
+                    return (
+                      <tr
+                        key={fund.name}
+                        className="hover:bg-blue-100 cursor-pointer"
+                        onClick={() => openFundDetails(fund)}
+                      >
+                        <td className="table-cell">{fund.name}</td>
+                        <td className="table-cell ">***</td>
+                        <td className="table-cell ">***</td>
+                        <td className="table-cell ">***</td>
+                        <td className="table-cell ">***</td>
+                        {/* <td className="table-cell ">***</td> */}
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -372,19 +407,25 @@ export default function Dashboard() {
             <div className="grid grid-cols-4 gap-4 mb-4">
               <div className="metric-box">
                 <div className="metric-label">TOTAL AUM</div>
-                <div className="metric-value">$125.7M</div>
-              </div>
-              <div className="metric-box">
-                <div className="metric-label">YTD ROI</div>
-                <div className="metric-value">+18.5%</div>
-              </div>
-              <div className="metric-box">
-                <div className="metric-label">TODAY&apos;S PNL</div>
-                <div className="metric-value">$234.3K</div>
+                <div className="metric-value">
+                  {formatCurrency(totals.totalInvestedUSD)}
+                </div>
               </div>
               <div className="metric-box">
                 <div className="metric-label">TOTAL ASSETS</div>
-                <div className="metric-value">47</div>
+                <div className="metric-value">{totals.totalAssets}</div>
+              </div>
+              <div className="metric-box">
+                <div className="metric-label">YTD ROI</div>
+                <div className="metric-value">
+                  {totals.totalROI.toFixed(2)}%
+                </div>
+              </div>
+              <div className="metric-box">
+                <div className="metric-label">TODAY&apos;S PNL</div>
+                <div className="metric-value">
+                  {formatUnits(totals.totalPnL)}
+                </div>
               </div>
             </div>
 
@@ -418,9 +459,9 @@ export default function Dashboard() {
                         .filter((asset) => asset.category === category)
                         .map((asset) => {
                           const currentValue =
-                            data?.[asset.symbol] === undefined
+                            assetPrices?.[asset.symbol] === undefined
                               ? 0
-                              : asset.quantity * data[asset.symbol];
+                              : asset.quantity * assetPrices[asset.symbol];
 
                           const pnl = getPnl(asset.initialValue, currentValue);
                           const roi = getRoi(asset.initialValue, currentValue);
