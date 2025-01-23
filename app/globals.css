@@ -30,8 +30,10 @@ body {
 }
 
 .window.maximized {
-  width: 100vw !important;
-  height: calc(100vh - 30px) !important;
+  /* width: 100vw !important;
+  height: calc(100vh - 30px) !important; */
+  margin-left: 12%;
+  /* margin-right: 10%; */
   top: 0;
   left: 0;
   transform: none;

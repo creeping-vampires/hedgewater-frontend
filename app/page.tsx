@@ -30,6 +30,7 @@ export default function Dashboard() {
   const [isWindowOpen, setIsWindowOpen] = useState(true);
   const [isMaximized, setIsMaximized] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isCommingSoonOpen, setCommingSoon] = useState(false);
 
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isDragging, setIsDragging] = useState(false);
@@ -136,6 +137,15 @@ export default function Dashboard() {
     setFundWindowMaximized(true);
   };
 
+  const openCommingSoon = (fund: FundDetails) => {
+    // setSelectedFund(fund);
+    // if (!openWindows.includes(fund.name)) {
+    //   setOpenWindows([...openWindows, fund.name]);
+    // }
+    setCommingSoon(true);
+    setFundWindowMaximized(true);
+  };
+
   const closeFundDetails = (fundName: string) => {
     setOpenWindows(openWindows.filter((w) => w !== fundName));
     if (selectedFund?.name === fundName) {
@@ -221,7 +231,11 @@ export default function Dashboard() {
 
       {/* Main Window */}
       {isWindowOpen && !isMinimized && (
-        <div className={`window w-[1024px] ${isMaximized ? "maximized" : ""}`}>
+        <div
+          className={`window w-[1024px] ${
+            isMaximized ? "maximized" : "w-[60vw] h-[60vh]"
+          }`}
+        >
           <div className="window-title" onMouseDown={handleMouseDown}>
             <div className="flex items-center gap-2">
               <Monitor size={14} />
@@ -248,7 +262,7 @@ export default function Dashboard() {
               <div className="metric-box">
                 <div className="metric-label">TOTAL AUM</div>
                 <div className="metric-value">
-                  {formatCurrency(totals.totalInvestedUSD)}
+                  {formatUnits(totals.totalCurrentUSD)}
                 </div>
               </div>
               <div className="metric-box">
@@ -312,7 +326,7 @@ export default function Dashboard() {
                       <tr
                         key={fund.name}
                         className="hover:bg-blue-100 cursor-pointer"
-                        onClick={() => openFundDetails(fund)}
+                        onClick={() => openCommingSoon(fund)}
                       >
                         <td className="table-cell">{fund.name}</td>
                         <td className="table-cell ">***</td>
@@ -408,7 +422,7 @@ export default function Dashboard() {
               <div className="metric-box">
                 <div className="metric-label">TOTAL AUM</div>
                 <div className="metric-value">
-                  {formatCurrency(totals.totalInvestedUSD)}
+                  {formatUnits(totals.totalCurrentUSD)}
                 </div>
               </div>
               <div className="metric-box">
@@ -503,6 +517,51 @@ export default function Dashboard() {
                 </div>
               </div>
             ))}
+          </div>
+          <div className="status-bar">
+            <div>Ready</div>
+            <div suppressHydrationWarning>{currentTime.toLocaleString()}</div>
+          </div>
+        </div>
+      )}
+
+      {/* Comming Soon Window */}
+      {isCommingSoonOpen && (
+        <div className="window w-[500px] h-[300px]">
+          <div className="window-title">
+            <div className="flex items-center gap-2">
+              <Monitor size={14} />
+              <span className="text-sm">Comming Soon</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <button className="minimize-button">
+                <span className="window-button-icon">_</span>
+              </button>
+              <button className="maximize-button">
+                <span className="window-button-icon">□</span>
+              </button>
+              <button
+                className="close-button"
+                onClick={() => setCommingSoon(false)}
+              >
+                <span className="window-button-icon">×</span>
+              </button>
+            </div>
+          </div>
+          <div className="window-content">
+            <div className="text-center w-32 h-32 mx-auto">
+              {/* <img
+                src="/images/comming-soon.png"
+                alt="Comming Soon"
+                className="w-32 h-32 mx-auto"
+              /> */}
+              <h3 className="text-lg font-semibold mt-12 text-center">
+                Coming Soon
+              </h3>
+              {/* <p className="text-sm text-gray-500">
+                This feature is not available yet
+              </p> */}
+            </div>
           </div>
           <div className="status-bar">
             <div>Ready</div>
