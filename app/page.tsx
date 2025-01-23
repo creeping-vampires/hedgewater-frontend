@@ -396,10 +396,10 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-          <div className="status-bar">
+          {/* <div className="status-bar">
             <div>Ready</div>
             <div suppressHydrationWarning>{currentTime.toLocaleString()}</div>
-          </div>
+          </div> */}
         </div>
       )}
 
@@ -537,10 +537,10 @@ export default function Dashboard() {
               </div>
             ))}
           </div>
-          <div className="status-bar">
+          {/* <div className="status-bar">
             <div>Ready</div>
             <div suppressHydrationWarning>{currentTime.toLocaleString()}</div>
-          </div>
+          </div> */}
         </div>
       )}
 
