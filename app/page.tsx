@@ -28,7 +28,7 @@ const equityData = [
 
 export default function Dashboard() {
   const [isWindowOpen, setIsWindowOpen] = useState(true);
-  const [isMaximized, setIsMaximized] = useState(true);
+  const [isMaximized, setIsMaximized] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isCommingSoonOpen, setCommingSoon] = useState(false);
 
@@ -37,7 +37,11 @@ export default function Dashboard() {
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [selectedFund, setSelectedFund] = useState<FundDetails | null>(null);
   const [openWindows, setOpenWindows] = useState<string[]>(["dashboard"]);
-  const [fundWindowMaximized, setFundWindowMaximized] = useState(true);
+  const [fundWindowMaximized, setFundWindowMaximized] = useState(false);
+
+  const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
+
+  const [startMenuOpen, setStartMenuOpen] = useState(false);
 
   const { assetPrices, totals } = useFetchData();
 
@@ -134,7 +138,7 @@ export default function Dashboard() {
     if (!openWindows.includes(fund.name)) {
       setOpenWindows([...openWindows, fund.name]);
     }
-    setFundWindowMaximized(true);
+    // setFundWindowMaximized(true);
   };
 
   const openCommingSoon = (fund: FundDetails) => {
@@ -153,10 +157,29 @@ export default function Dashboard() {
     }
   };
 
+  const handleIconClick = (iconId: string) => {
+    setSelectedIcon(iconId);
+    if (iconId === "dashboard-icon") {
+      setIsWindowOpen(true);
+      setIsMinimized(false);
+    } else if (iconId === "about") {
+      // setShowAboutModal(true);
+    } else if (iconId === "recycle") {
+      // setShowRecycleBinModal(true);
+    }
+  };
+
+  const desktopItems = [
+    { id: "dashboard-icon.png", label: "Dashboard" },
+    { id: "about-icon.png", label: "About" },
+    { id: "vision-icon.png", label: "Our Vision" },
+    { id: "bin-icon.png", label: "Recycle Bin" },
+  ];
+
   return (
     <div className="min-h-screen">
       {/* Desktop Icons */}
-      <div className="flex">
+      <div className="flex flex-col">
         <div className="p-8">
           <div
             className="desktop-icon"
@@ -231,11 +254,7 @@ export default function Dashboard() {
 
       {/* Main Window */}
       {isWindowOpen && !isMinimized && (
-        <div
-          className={`window w-[1024px] ${
-            isMaximized ? "maximized" : "w-[60vw] h-[60vh]"
-          }`}
-        >
+        <div className={`window w-[1024px] ${isMaximized ? "maximized" : ""}`}>
           <div className="window-title" onMouseDown={handleMouseDown}>
             <div className="flex items-center gap-2">
               <Monitor size={14} />
@@ -342,7 +361,7 @@ export default function Dashboard() {
             </div>
 
             {/* Charts */}
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            {/* <div className="grid grid-cols-2 gap-4 mb-4">
               <div className="chart-container">
                 <div className="chart-title">Returns Since Inception</div>
                 <ResponsiveChart
@@ -359,7 +378,7 @@ export default function Dashboard() {
                   height={200}
                 />
               </div>
-            </div>
+            </div> */}
 
             {/* Category Mix */}
             <div className="grid grid-cols-3 gap-4">
@@ -570,9 +589,17 @@ export default function Dashboard() {
         </div>
       )}
 
+      {/* Start Menu */}
+
       {/* Taskbar */}
       <div className="taskbar">
-        <button className="start-button">
+        <button
+          className="start-button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setStartMenuOpen(!startMenuOpen);
+          }}
+        >
           {/* <Monitor size={20} /> */}
           <img
             style={{ height: 20 }}
