@@ -229,7 +229,7 @@ export default function Dashboard() {
               src="/images/vision-icon.png"
               alt="Fund Icon"
             />
-            <span className="text-center">Out Vision</span>
+            <span className="text-center">Our Vision</span>
           </div>
         </div>
 
