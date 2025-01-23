@@ -1,102 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
-
 import { useState, useEffect, useCallback } from "react";
-import { X, Minus, Square, Monitor } from "lucide-react";
+import { Monitor } from "lucide-react";
 import { ResponsiveChart } from "@/components/ResponsiveChart";
-
-interface Asset {
-  symbol: string;
-  quantity: number;
-  currentValue: number;
-  pnl: number;
-  roi: number;
-  category: "HL Spot" | "Pre-bonded" | "Treasury Swap";
-}
-
-interface FundDetails {
-  name: string;
-  assets: Asset[];
-}
-
-const fundsData: FundDetails[] = [
-  {
-    name: "Genesis I",
-    assets: [
-      {
-        symbol: "AAPL",
-        quantity: 15000,
-        currentValue: 2745000,
-        pnl: 45000,
-        roi: 12.4,
-        category: "HL Spot",
-      },
-      {
-        symbol: "MSFT",
-        quantity: 12500,
-        currentValue: 4125000,
-        pnl: 62500,
-        roi: 15.2,
-        category: "HL Spot",
-      },
-      {
-        symbol: "GOOGL",
-        quantity: 8000,
-        currentValue: 2160000,
-        pnl: -24000,
-        roi: -1.1,
-        category: "Pre-bonded",
-      },
-      {
-        symbol: "NVDA",
-        quantity: 5000,
-        currentValue: 2450000,
-        pnl: 125000,
-        roi: 25.5,
-        category: "Pre-bonded",
-      },
-      {
-        symbol: "META",
-        quantity: 10000,
-        currentValue: 3450000,
-        pnl: 26000,
-        roi: 7.5,
-        category: "Treasury Swap",
-      },
-      {
-        symbol: "TSLA",
-        quantity: 7500,
-        currentValue: 1875000,
-        pnl: -15000,
-        roi: -0.8,
-        category: "Treasury Swap",
-      },
-      {
-        symbol: "AMZN",
-        quantity: 6000,
-        currentValue: 2340000,
-        pnl: 34000,
-        roi: 1.5,
-        category: "HL Spot",
-      },
-      {
-        symbol: "AMD",
-        quantity: 20000,
-        currentValue: 2800000,
-        pnl: 80000,
-        roi: 2.9,
-        category: "Pre-bonded",
-      },
-    ],
-  },
-  {
-    name: "Fund 2",
-    assets: [],
-  },
-  {
-    name: "Fund 3",
-    assets: [],
-  },
-];
+import { FundDetails, fundsData } from "@/lib/data";
+import { useFetchData } from "@/hooks/useFetchData";
+import { getPnl, getRoi } from "@/lib/utils";
 
 const returnsData = [
   { date: "1/07", value: -5 },
@@ -120,12 +29,17 @@ export default function Dashboard() {
   const [isWindowOpen, setIsWindowOpen] = useState(true);
   const [isMaximized, setIsMaximized] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
+
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [selectedFund, setSelectedFund] = useState<FundDetails | null>(null);
   const [openWindows, setOpenWindows] = useState<string[]>(["dashboard"]);
   const [fundWindowMaximized, setFundWindowMaximized] = useState(true);
+
+  const data: any = useFetchData();
+
+  console.log("data", data);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -231,21 +145,76 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen">
       {/* Desktop Icons */}
-      <div className="p-4">
-        <div
-          className="desktop-icon"
-          onClick={() => {
-            setIsWindowOpen(true);
-            setIsMinimized(false);
-          }}
-        >
-          {/* <Monitor size={64} /> */}
-          <img
-            style={{ height: 64 }}
-            src="/images/desktop.png"
-            alt="Fund Icon"
-          />
-          <span className="text-center">Hedgewater Fund</span>
+      <div className="flex">
+        <div className="p-8">
+          <div
+            className="desktop-icon"
+            onDoubleClick={() => {
+              setIsWindowOpen(true);
+              setIsMinimized(false);
+            }}
+          >
+            <img
+              style={{ height: 64 }}
+              src="/images/dashboard-icon.png"
+              alt="Fund Icon"
+            />
+            <span className="text-center">Dashboard</span>
+          </div>
+        </div>
+
+        <div className="p-8">
+          <div
+            className="desktop-icon"
+            onDoubleClick={() => {
+              // setIsWindowOpen(true);
+              // setIsMinimized(false);
+            }}
+          >
+            {/* <Monitor size={64} /> */}
+            <img
+              style={{ height: 64 }}
+              src="/images/about-icon.png"
+              alt="Fund Icon"
+            />
+            <span className="text-center">About</span>
+          </div>
+        </div>
+
+        <div className="p-8">
+          <div
+            className="desktop-icon"
+            onDoubleClick={() => {
+              // setIsWindowOpen(true);
+              // setIsMinimized(false);
+            }}
+          >
+            {/* <Monitor size={64} /> */}
+            <img
+              style={{ height: 64 }}
+              src="/images/vision-icon.png"
+              alt="Fund Icon"
+            />
+            <span className="text-center">Out Vision</span>
+          </div>
+        </div>
+
+        <div className="p-8">
+          <div
+            className="desktop-icon"
+            onDoubleClick={() => {
+              // setIsWindowOpen(true);
+              // setIsMinimized(false);
+            }}
+          >
+            {/* <Monitor size={64} /> */}
+            <img
+              style={{ height: 64 }}
+              src="/images/bin-icon.png"
+              alt="Fund Icon"
+            />
+            <span className="text-center">Recycle Bin</span>
+          </div>
         </div>
       </div>
 
@@ -288,7 +257,7 @@ export default function Dashboard() {
                 <div className="metric-value">+18.5%</div>
               </div>
               <div className="metric-box">
-                <div className="metric-label">TODAY'S PNL</div>
+                <div className="metric-label">TODAY&apos;S PNL</div>
                 <div className="metric-value">$234.3K</div>
               </div>
             </div>
@@ -410,7 +379,7 @@ export default function Dashboard() {
                 <div className="metric-value">+18.5%</div>
               </div>
               <div className="metric-box">
-                <div className="metric-label">TODAY'S PNL</div>
+                <div className="metric-label">TODAY&apos;S PNL</div>
                 <div className="metric-value">$234.3K</div>
               </div>
               <div className="metric-box">
@@ -420,7 +389,7 @@ export default function Dashboard() {
             </div>
 
             {/* Fund Categories */}
-            {["HL Spot", "Pre-bonded", "Treasury Swap"].map((category) => (
+            {["HL Listed", "Pre-bonded", "Treasury Swap"].map((category) => (
               <div key={category} className="mb-6">
                 <h3 className="text-lg font-semibold mb-2 px-2 py-1 bg-[#d4d0c8] border border-[#848484]">
                   {category}
@@ -431,45 +400,63 @@ export default function Dashboard() {
                       <tr>
                         <th className="table-header">ASSET</th>
                         <th className="table-header">QUANTITY</th>
+                        <th className="table-header">INITIAL VALUE</th>
                         <th className="table-header">CURRENT VALUE</th>
-                        <th className="table-header">24H PNL</th>
+                        <th className="table-header">PNL</th>
                         <th className="table-header">ROI</th>
                       </tr>
                     </thead>
+                    {selectedFund.assets.filter(
+                      (asset) => asset.category === category
+                    ).length === 0 && (
+                      <h3 className="text-lg text-center font-semibold mb-2 px-2 py-1 ">
+                        No assets
+                      </h3>
+                    )}
                     <tbody>
                       {selectedFund.assets
                         .filter((asset) => asset.category === category)
-                        .map((asset) => (
-                          <tr key={asset.symbol}>
-                            <td className="table-cell">{asset.symbol}</td>
-                            <td className="table-cell">
-                              {asset.quantity.toLocaleString()}
-                            </td>
-                            <td className="table-cell">
-                              {formatCurrency(asset.currentValue)}
-                            </td>
-                            <td
-                              className={`table-cell ${
-                                asset.pnl >= 0
-                                  ? "text-green-500"
-                                  : "text-red-500"
-                              }`}
-                            >
-                              {asset.pnl >= 0 ? "+" : ""}
-                              {formatCurrency(asset.pnl)}
-                            </td>
-                            <td
-                              className={`table-cell ${
-                                asset.roi >= 0
-                                  ? "text-green-500"
-                                  : "text-red-500"
-                              }`}
-                            >
-                              {asset.roi >= 0 ? "+" : ""}
-                              {asset.roi}%
-                            </td>
-                          </tr>
-                        ))}
+                        .map((asset) => {
+                          const currentValue =
+                            data?.[asset.symbol] === undefined
+                              ? 0
+                              : asset.quantity * data[asset.symbol];
+
+                          const pnl = getPnl(asset.initialValue, currentValue);
+                          const roi = getRoi(asset.initialValue, currentValue);
+
+                          return (
+                            <tr key={asset.symbol}>
+                              <td className="table-cell">{asset.symbol}</td>
+                              <td className="table-cell">
+                                {asset.quantity.toLocaleString()}
+                              </td>
+                              <td className="table-cell">
+                                {formatCurrency(asset.initialValue)}
+                              </td>
+
+                              <td className="table-cell">
+                                {formatCurrency(currentValue)}
+                              </td>
+                              <td
+                                className={`table-cell ${
+                                  pnl >= 0 ? "text-green-500" : "text-red-500"
+                                }`}
+                              >
+                                {pnl >= 0 ? "+" : ""}
+                                {formatCurrency(pnl)}
+                              </td>
+                              <td
+                                className={`table-cell ${
+                                  roi >= 0 ? "text-green-500" : "text-red-500"
+                                }`}
+                              >
+                                {roi >= 0 ? "+" : ""}
+                                {roi.toFixed(4)}%
+                              </td>
+                            </tr>
+                          );
+                        })}
                     </tbody>
                   </table>
                 </div>
@@ -510,7 +497,7 @@ export default function Dashboard() {
               {/* <Monitor size={16} /> */}
               <img
                 style={{ height: 16 }}
-                src="/images/desktop.png"
+                src="/images/dashboard-icon.png"
                 alt="Fund Icon"
               />
               Fund Dashboard
