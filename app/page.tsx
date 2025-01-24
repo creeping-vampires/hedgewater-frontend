@@ -44,6 +44,9 @@ export default function Dashboard() {
   const [openWindows, setOpenWindows] = useState<string[]>(["dashboard"]);
   const [fundWindowMaximized, setFundWindowMaximized] = useState(false);
 
+  const [aboutWindowMaximized, setAboutWindowMaximized] = useState(false);
+  const [visionWindowMaximized, setVisionWindowMaximized] = useState(false);
+
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   const [startMenuOpen, setStartMenuOpen] = useState(false);
 
@@ -298,7 +301,7 @@ export default function Dashboard() {
                 <div className="metric-value">{totals.totalAssets}</div>
               </div>
               <div className="metric-box">
-                <div className="metric-label">YTD ROI</div>
+                <div className="metric-label">YTD PNL</div>
                 <div className="metric-value">
                   {totals.totalROI.toFixed(2)}%
                 </div>
@@ -431,7 +434,7 @@ export default function Dashboard() {
                 <div className="metric-value">{totals.totalAssets}</div>
               </div>
               <div className="metric-box">
-                <div className="metric-label">YTD ROI</div>
+                <div className="metric-label">YTD PNL</div>
                 <div className="metric-value">
                   {totals.totalROI.toFixed(2)}%
                 </div>
@@ -523,7 +526,7 @@ export default function Dashboard() {
 
       {/* About Window */}
       {showAboutWindow && (
-        <div className="window w-[750px] h-[900]">
+        <div className="window w-[970px] h-[900]">
           <div className="window-title" onMouseDown={handleMouseDown}>
             <div className="flex items-center gap-2">
               <img
@@ -534,15 +537,18 @@ export default function Dashboard() {
               <span>About</span>
             </div>
             <div className="flex items-center gap-1">
-              <button
+              {/* <button
                 className="minimize-button"
                 onClick={() => setShowAboutWindow(false)}
               >
                 <span className="window-button-icon">_</span>
               </button>
-              <button className="maximize-button">
+              <button
+                className="maximize-button"
+                // onClick={() => setAboutWindowMaximized(!aboutWindowMaximized)}
+              >
                 <span className="window-button-icon">□</span>
-              </button>
+              </button> */}
               <button
                 className="close-button"
                 onClick={() => setShowAboutWindow(false)}
@@ -559,7 +565,7 @@ export default function Dashboard() {
 
       {/* Vision Window */}
       {showVisionWindow && (
-        <div className="window w-[750px] h-[900]">
+        <div className="window w-[970px] h-[900]">
           <div className="window-title" onMouseDown={handleMouseDown}>
             <div className="flex items-center gap-2">
               <img
@@ -570,7 +576,7 @@ export default function Dashboard() {
               <span>Our Vision</span>
             </div>
             <div className="flex items-center gap-1">
-              <button
+              {/* <button
                 className="minimize-button"
                 onClick={() => setShowVisionWindow(false)}
               >
@@ -578,7 +584,7 @@ export default function Dashboard() {
               </button>
               <button className="maximize-button">
                 <span className="window-button-icon">□</span>
-              </button>
+              </button> */}
               <button
                 className="close-button"
                 onClick={() => setShowVisionWindow(false)}
@@ -606,7 +612,7 @@ export default function Dashboard() {
               <span>Recycle Bin</span>
             </div>
             <div className="flex items-center gap-1">
-              <button
+              {/* <button
                 className="minimize-button"
                 onClick={() => setShowRecycleBin(false)}
               >
@@ -614,7 +620,7 @@ export default function Dashboard() {
               </button>
               <button className="maximize-button">
                 <span className="window-button-icon">□</span>
-              </button>
+              </button> */}
               <button
                 className="close-button"
                 onClick={() => setShowRecycleBin(false)}
