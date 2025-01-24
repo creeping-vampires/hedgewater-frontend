@@ -7,6 +7,8 @@ import { FundDetails, fundsData } from "@/lib/data";
 import { useFetchData } from "@/hooks/useFetchData";
 import { formatUnits, getPnl, getRoi } from "@/lib/utils";
 import { format } from "node:path";
+import AboutArticle from "@/components/AboutArticle";
+import OurVisionArticle from "@/components/OurVision";
 
 const returnsData = [
   { date: "1/07", value: -5 },
@@ -31,6 +33,9 @@ export default function Dashboard() {
   const [isMaximized, setIsMaximized] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isCommingSoonOpen, setCommingSoon] = useState(false);
+  const [showAboutWindow, setShowAboutWindow] = useState(false);
+  const [showVisionWindow, setShowVisionWindow] = useState(false);
+  const [showRecycleBin, setShowRecycleBin] = useState(false);
 
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isDragging, setIsDragging] = useState(false);
@@ -40,18 +45,28 @@ export default function Dashboard() {
   const [fundWindowMaximized, setFundWindowMaximized] = useState(false);
 
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
-
   const [startMenuOpen, setStartMenuOpen] = useState(false);
 
   const { assetPrices, totals } = useFetchData();
-
-  console.log("data", { assetPrices });
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
     return () => clearInterval(timer);
+  }, []);
+
+  // Close start menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest(".start-button") && !target.closest(".start-menu")) {
+        setStartMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const formatTime = (date: Date) => {
@@ -138,14 +153,9 @@ export default function Dashboard() {
     if (!openWindows.includes(fund.name)) {
       setOpenWindows([...openWindows, fund.name]);
     }
-    // setFundWindowMaximized(true);
   };
 
   const openCommingSoon = (fund: FundDetails) => {
-    // setSelectedFund(fund);
-    // if (!openWindows.includes(fund.name)) {
-    //   setOpenWindows([...openWindows, fund.name]);
-    // }
     setCommingSoon(true);
     setFundWindowMaximized(true);
   };
@@ -157,28 +167,39 @@ export default function Dashboard() {
     }
   };
 
-  const handleIconClick = (iconId: string) => {
-    setSelectedIcon(iconId);
-    if (iconId === "dashboard-icon") {
-      setIsWindowOpen(true);
-      setIsMinimized(false);
-    } else if (iconId === "about") {
-      // setShowAboutModal(true);
-    } else if (iconId === "recycle") {
-      // setShowRecycleBinModal(true);
+  const handleStartMenuItemClick = (action: string) => {
+    setStartMenuOpen(false);
+    switch (action) {
+      case "dashboard":
+        setIsWindowOpen(true);
+        setIsMinimized(false);
+        break;
+      case "about":
+        setShowAboutWindow(true);
+        break;
+      case "vision":
+        setShowVisionWindow(true);
+        break;
+      case "recycle":
+        setShowRecycleBin(true);
+        break;
     }
   };
-
-  const desktopItems = [
-    { id: "dashboard-icon.png", label: "Dashboard" },
-    { id: "about-icon.png", label: "About" },
-    { id: "vision-icon.png", label: "Our Vision" },
-    { id: "bin-icon.png", label: "Recycle Bin" },
-  ];
 
   return (
     <div className="min-h-screen">
       {/* Desktop Icons */}
+
+      {/* Water marl icon show on the bottom right side of the screen */}
+
+      <div className="watermark">
+        <img
+          style={{ height: 100 }}
+          src="/images/watermark.png"
+          alt="Watermark"
+        />
+      </div>
+
       <div className="flex flex-col">
         <div className="p-8">
           <div
@@ -200,16 +221,12 @@ export default function Dashboard() {
         <div className="p-8">
           <div
             className="desktop-icon"
-            onDoubleClick={() => {
-              // setIsWindowOpen(true);
-              // setIsMinimized(false);
-            }}
+            onDoubleClick={() => setShowAboutWindow(true)}
           >
-            {/* <Monitor size={64} /> */}
             <img
               style={{ height: 64 }}
               src="/images/about-icon.png"
-              alt="Fund Icon"
+              alt="About Icon"
             />
             <span className="text-center">About</span>
           </div>
@@ -218,16 +235,12 @@ export default function Dashboard() {
         <div className="p-8">
           <div
             className="desktop-icon"
-            onDoubleClick={() => {
-              // setIsWindowOpen(true);
-              // setIsMinimized(false);
-            }}
+            onDoubleClick={() => setShowVisionWindow(true)}
           >
-            {/* <Monitor size={64} /> */}
             <img
               style={{ height: 64 }}
               src="/images/vision-icon.png"
-              alt="Fund Icon"
+              alt="Vision Icon"
             />
             <span className="text-center">Our Vision</span>
           </div>
@@ -236,23 +249,19 @@ export default function Dashboard() {
         <div className="p-8">
           <div
             className="desktop-icon"
-            onDoubleClick={() => {
-              // setIsWindowOpen(true);
-              // setIsMinimized(false);
-            }}
+            onDoubleClick={() => setShowRecycleBin(true)}
           >
-            {/* <Monitor size={64} /> */}
             <img
               style={{ height: 64 }}
               src="/images/bin-icon.png"
-              alt="Fund Icon"
+              alt="Recycle Bin"
             />
             <span className="text-center">Recycle Bin</span>
           </div>
         </div>
       </div>
 
-      {/* Main Window */}
+      {/* Main Dashboard Window */}
       {isWindowOpen && !isMinimized && (
         <div className={`window w-[1024px] ${isMaximized ? "maximized" : ""}`}>
           <div className="window-title" onMouseDown={handleMouseDown}>
@@ -312,7 +321,6 @@ export default function Dashboard() {
                     <th className="table-header">Current Value</th>
                     <th className="table-header">LAST MONTH</th>
                     <th className="table-header">PNL</th>
-                    {/* <th className="table-header">LTD</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -337,7 +345,6 @@ export default function Dashboard() {
                           <td className="table-cell text-green-600">
                             {formatCurrency(totals.totalPnL)}
                           </td>
-                          {/* <td className="table-cell text-green-500">+7.29%</td> */}
                         </tr>
                       );
                     }
@@ -352,33 +359,12 @@ export default function Dashboard() {
                         <td className="table-cell ">***</td>
                         <td className="table-cell ">***</td>
                         <td className="table-cell ">***</td>
-                        {/* <td className="table-cell ">***</td> */}
                       </tr>
                     );
                   })}
                 </tbody>
               </table>
             </div>
-
-            {/* Charts */}
-            {/* <div className="grid grid-cols-2 gap-4 mb-4">
-              <div className="chart-container">
-                <div className="chart-title">Returns Since Inception</div>
-                <ResponsiveChart
-                  data={returnsData}
-                  color="#4338ca"
-                  height={200}
-                />
-              </div>
-              <div className="chart-container">
-                <div className="chart-title">Firm Equity and Leverage</div>
-                <ResponsiveChart
-                  data={equityData}
-                  color="#059669"
-                  height={200}
-                />
-              </div>
-            </div> */}
 
             {/* Category Mix */}
             <div className="grid grid-cols-3 gap-4">
@@ -396,10 +382,6 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-          {/* <div className="status-bar">
-            <div>Ready</div>
-            <div suppressHydrationWarning>{currentTime.toLocaleString()}</div>
-          </div> */}
         </div>
       )}
 
@@ -508,7 +490,6 @@ export default function Dashboard() {
                               <td className="table-cell">
                                 {formatCurrency(asset.initialValue)}
                               </td>
-
                               <td className="table-cell">
                                 {formatCurrency(currentValue)}
                               </td>
@@ -537,23 +518,26 @@ export default function Dashboard() {
               </div>
             ))}
           </div>
-          {/* <div className="status-bar">
-            <div>Ready</div>
-            <div suppressHydrationWarning>{currentTime.toLocaleString()}</div>
-          </div> */}
         </div>
       )}
 
-      {/* Comming Soon Window */}
-      {isCommingSoonOpen && (
-        <div className="window w-[500px] h-[300px]">
-          <div className="window-title">
+      {/* About Window */}
+      {showAboutWindow && (
+        <div className="window w-[750px] h-[900]">
+          <div className="window-title" onMouseDown={handleMouseDown}>
             <div className="flex items-center gap-2">
-              <Monitor size={14} />
-              <span className="text-sm">Comming Soon</span>
+              <img
+                src="/images/about-icon.png"
+                alt="About"
+                className="h-4 w-4"
+              />
+              <span>About</span>
             </div>
             <div className="flex items-center gap-1">
-              <button className="minimize-button">
+              <button
+                className="minimize-button"
+                onClick={() => setShowAboutWindow(false)}
+              >
                 <span className="window-button-icon">_</span>
               </button>
               <button className="maximize-button">
@@ -561,46 +545,154 @@ export default function Dashboard() {
               </button>
               <button
                 className="close-button"
-                onClick={() => setCommingSoon(false)}
+                onClick={() => setShowAboutWindow(false)}
               >
                 <span className="window-button-icon">×</span>
               </button>
             </div>
           </div>
           <div className="window-content">
-            <div className="text-center w-32 h-32 mx-auto">
-              {/* <img
-                src="/images/comming-soon.png"
-                alt="Comming Soon"
-                className="w-32 h-32 mx-auto"
-              /> */}
-              <h3 className="text-lg font-semibold mt-12 text-center">
-                Coming Soon
-              </h3>
-              {/* <p className="text-sm text-gray-500">
-                This feature is not available yet
-              </p> */}
+            <AboutArticle />
+          </div>
+        </div>
+      )}
+
+      {/* Vision Window */}
+      {showVisionWindow && (
+        <div className="window w-[750px] h-[900]">
+          <div className="window-title" onMouseDown={handleMouseDown}>
+            <div className="flex items-center gap-2">
+              <img
+                src="/images/vision-icon.png"
+                alt="Vision"
+                className="h-4 w-4"
+              />
+              <span>Our Vision</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <button
+                className="minimize-button"
+                onClick={() => setShowVisionWindow(false)}
+              >
+                <span className="window-button-icon">_</span>
+              </button>
+              <button className="maximize-button">
+                <span className="window-button-icon">□</span>
+              </button>
+              <button
+                className="close-button"
+                onClick={() => setShowVisionWindow(false)}
+              >
+                <span className="window-button-icon">×</span>
+              </button>
             </div>
           </div>
-          <div className="status-bar">
-            <div>Ready</div>
-            <div suppressHydrationWarning>{currentTime.toLocaleString()}</div>
+          <div className="window-content">
+            <OurVisionArticle />
+          </div>
+        </div>
+      )}
+
+      {/* Recycle Bin Window */}
+      {showRecycleBin && (
+        <div className="window w-[500px]">
+          <div className="window-title" onMouseDown={handleMouseDown}>
+            <div className="flex items-center gap-2">
+              <img
+                src="/images/bin-icon.png"
+                alt="Recycle Bin"
+                className="h-4 w-4"
+              />
+              <span>Recycle Bin</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <button
+                className="minimize-button"
+                onClick={() => setShowRecycleBin(false)}
+              >
+                <span className="window-button-icon">_</span>
+              </button>
+              <button className="maximize-button">
+                <span className="window-button-icon">□</span>
+              </button>
+              <button
+                className="close-button"
+                onClick={() => setShowRecycleBin(false)}
+              >
+                <span className="window-button-icon">×</span>
+              </button>
+            </div>
+          </div>
+          <div className="window-content">
+            <p className="text-center text-gray-500 mt-8">
+              Recycle Bin is empty
+            </p>
           </div>
         </div>
       )}
 
       {/* Start Menu */}
+      {startMenuOpen && (
+        <div className="start-menu">
+          <div className="start-menu-header">
+            <img src="/images/logo.png" alt="Logo" className="w-8 h-8" />
+            <span className="start-menu-user">Hedgewater Fund</span>
+          </div>
+          <div className="start-menu-items">
+            <button
+              className="start-menu-item"
+              onClick={() => handleStartMenuItemClick("dashboard")}
+            >
+              <img
+                src="/images/dashboard-icon.png"
+                alt="Dashboard"
+                className="w-6 h-6"
+              />
+              Dashboard
+            </button>
+            <button
+              className="start-menu-item"
+              onClick={() => handleStartMenuItemClick("about")}
+            >
+              <img
+                src="/images/about-icon.png"
+                alt="About"
+                className="w-6 h-6"
+              />
+              About
+            </button>
+            <button
+              className="start-menu-item"
+              onClick={() => handleStartMenuItemClick("vision")}
+            >
+              <img
+                src="/images/vision-icon.png"
+                alt="Vision"
+                className="w-6 h-6"
+              />
+              Our Vision
+            </button>
+            <button
+              className="start-menu-item"
+              onClick={() => handleStartMenuItemClick("recycle")}
+            >
+              <img
+                src="/images/bin-icon.png"
+                alt="Recycle Bin"
+                className="w-6 h-6"
+              />
+              Recycle Bin
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Taskbar */}
       <div className="taskbar">
         <button
           className="start-button"
-          onClick={(e) => {
-            e.stopPropagation();
-            setStartMenuOpen(!startMenuOpen);
-          }}
+          onClick={() => setStartMenuOpen(!startMenuOpen)}
         >
-          {/* <Monitor size={20} /> */}
           <img
             style={{ height: 20 }}
             src="/images/start-icon.png"
@@ -621,7 +713,6 @@ export default function Dashboard() {
                 }
               }}
             >
-              {/* <Monitor size={16} /> */}
               <img
                 style={{ height: 16 }}
                 src="/images/dashboard-icon.png"

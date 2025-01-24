@@ -247,3 +247,7 @@ body {
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
   font-size: 14px;
 }
+
+.watermark {
+  @apply text-white text-xs absolute bottom-8 right-0 p-20;
+}
