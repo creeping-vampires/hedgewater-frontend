@@ -345,7 +345,7 @@ export default function Dashboard() {
               <div className="metric-box">
                 <div className="metric-label">YTD PNL</div>
                 <div className="metric-value">
-                  {totals.totalROI.toFixed(2)}%
+                  {formatUnits(totals.totalPnL)}
                 </div>
               </div>
               <div className="metric-box">
@@ -470,7 +470,7 @@ export default function Dashboard() {
               <div className="metric-box">
                 <div className="metric-label">YTD PNL</div>
                 <div className="metric-value">
-                  {totals.totalROI.toFixed(2)}%
+                  {formatUnits(totals.totalPnL)}
                 </div>
               </div>
               <div className="metric-box">

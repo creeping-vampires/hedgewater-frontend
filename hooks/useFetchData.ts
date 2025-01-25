@@ -48,6 +48,7 @@ export function useFetchData() {
         preparedData["USDC"] = 1;
         // todo: fix hfun token price in the future
         preparedData["HWTR"] = 0.1207504;
+        preparedData["----"] = 1;
 
         setData(preparedData);
 

@@ -56,6 +56,15 @@ export const fundsData: FundDetails[] = [
         roi: 0,
         category: "Treasury Swap",
       },
+      {
+        symbol: "----",
+        quantity: 10000,
+        initialValue: 10000,
+        currentValue: 0,
+        pnl: 0,
+        roi: 0,
+        category: "Treasury Swap",
+      },
     ],
   },
   {
