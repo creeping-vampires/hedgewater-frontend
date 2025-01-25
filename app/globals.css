@@ -32,8 +32,6 @@ body {
 .window.maximized {
   width: 100vw !important;
   height: calc(100vh - 30px) !important;
-  /* margin-left: 12%; */
-  /* margin-right: 10%; */
   top: 0;
   left: 0;
   transform: none;
@@ -85,11 +83,11 @@ body {
 }
 
 .table-header {
-  @apply bg-[#d4d0c8] text-left font-semibold px-4 py-1 border-b border-[#848484] text-sm;
+  @apply bg-[#d4d0c8] font-semibold px-4 py-1 border-b border-[#848484] text-sm text-center;
 }
 
 .table-cell {
-  @apply px-4 py-1 border-b border-[#848484] text-sm;
+  @apply px-4 py-1 border-b border-[#848484] text-sm text-center;
 }
 
 .chart-container {
@@ -228,7 +226,6 @@ body {
 .start-menu-item:hover .start-menu-item-description {
   color: #fff;
 }
-
 
 .desktop-icon {
   @apply flex flex-col items-center justify-center text-white text-sm cursor-pointer p-2 rounded hover:bg-white/10;
