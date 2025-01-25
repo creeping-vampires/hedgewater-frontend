@@ -371,7 +371,7 @@ export default function Dashboard() {
 
             {/* Category Mix */}
             <div className="grid grid-cols-3 gap-4">
-              <div className="category-box">
+              {/* <div className="category-box">
                 <div className="text-sm font-medium">ARM</div>
                 <div className="text-xl font-bold">00.00%</div>
               </div>
@@ -382,7 +382,7 @@ export default function Dashboard() {
               <div className="category-box">
                 <div className="text-sm font-medium">Fixed</div>
                 <div className="text-xl font-bold">00.00%</div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
