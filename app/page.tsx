@@ -28,6 +28,16 @@ const equityData = [
   { date: "11/07", value: -1 },
 ];
 
+interface WindowPosition {
+  x: number;
+  y: number;
+}
+
+interface DragState {
+  isDragging: boolean;
+  offset: { x: number; y: number };
+}
+
 export default function Dashboard() {
   const [isWindowOpen, setIsWindowOpen] = useState(true);
   const [isMaximized, setIsMaximized] = useState(false);
@@ -38,8 +48,6 @@ export default function Dashboard() {
   const [showRecycleBin, setShowRecycleBin] = useState(false);
 
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [selectedFund, setSelectedFund] = useState<FundDetails | null>(null);
   const [openWindows, setOpenWindows] = useState<string[]>(["dashboard"]);
   const [fundWindowMaximized, setFundWindowMaximized] = useState(false);
@@ -50,6 +58,16 @@ export default function Dashboard() {
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   const [startMenuOpen, setStartMenuOpen] = useState(false);
 
+  // Track positions for each window type
+  const [windowPositions, setWindowPositions] = useState<{
+    [key: string]: WindowPosition;
+  }>({});
+
+  // Track drag state for each window type
+  const [dragStates, setDragStates] = useState<{
+    [key: string]: DragState;
+  }>({});
+
   const { assetPrices, totals } = useFetchData();
 
   useEffect(() => {
@@ -59,7 +77,6 @@ export default function Dashboard() {
     return () => clearInterval(timer);
   }, []);
 
-  // Close start menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -89,7 +106,10 @@ export default function Dashboard() {
     }).format(value);
   };
 
-  const handleMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseDown = (
+    windowId: string,
+    e: React.MouseEvent<HTMLDivElement>
+  ) => {
     if ((e.target as HTMLElement).closest("button")) return;
 
     const windowElement = (e.target as HTMLElement).closest(
@@ -98,44 +118,64 @@ export default function Dashboard() {
     if (!windowElement) return;
 
     const rect = windowElement.getBoundingClientRect();
-    setIsDragging(true);
-    setDragOffset({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  }, []);
+    setDragStates((prev) => ({
+      ...prev,
+      [windowId]: {
+        isDragging: true,
+        offset: {
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+        },
+      },
+    }));
+  };
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
-      if (!isDragging || isMaximized) return;
+      Object.entries(dragStates).forEach(([windowId, dragState]) => {
+        if (!dragState.isDragging) return;
 
-      const windowElement = document.querySelector(".window") as HTMLElement;
-      if (!windowElement) return;
-
-      const x = e.clientX - dragOffset.x;
-      const y = e.clientY - dragOffset.y;
-
-      windowElement.style.left = `${x}px`;
-      windowElement.style.top = `${y}px`;
-      windowElement.style.transform = "none";
+        setWindowPositions((prev) => ({
+          ...prev,
+          [windowId]: {
+            x: e.clientX - dragState.offset.x,
+            y: e.clientY - dragState.offset.y,
+          },
+        }));
+      });
     },
-    [isDragging, isMaximized, dragOffset]
+    [dragStates]
   );
 
   const handleMouseUp = useCallback(() => {
-    setIsDragging(false);
+    setDragStates((prev) => {
+      const newState = { ...prev };
+      Object.keys(newState).forEach((key) => {
+        newState[key] = { ...newState[key], isDragging: false };
+      });
+      return newState;
+    });
   }, []);
 
   useEffect(() => {
-    if (isDragging) {
-      window.addEventListener("mousemove", handleMouseMove);
-      window.addEventListener("mouseup", handleMouseUp);
-    }
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [isDragging, handleMouseMove, handleMouseUp]);
+  }, [handleMouseMove, handleMouseUp]);
+
+  const getWindowStyle = (windowId: string) => {
+    const position = windowPositions[windowId];
+    if (!position) return {};
+
+    return {
+      left: `${position.x}px`,
+      top: `${position.y}px`,
+      transform: "none",
+    };
+  };
 
   const toggleMaximize = () => {
     setIsMaximized(!isMaximized);
@@ -191,10 +231,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen">
-      {/* Desktop Icons */}
-
-      {/* Water marl icon show on the bottom right side of the screen */}
-
       <div className="watermark">
         <img
           style={{ height: 100 }}
@@ -266,8 +302,14 @@ export default function Dashboard() {
 
       {/* Main Dashboard Window */}
       {isWindowOpen && !isMinimized && (
-        <div className={`window w-[1024px] ${isMaximized ? "maximized" : ""}`}>
-          <div className="window-title" onMouseDown={handleMouseDown}>
+        <div
+          className={`window w-[1024px] ${isMaximized ? "maximized" : ""}`}
+          style={!isMaximized ? getWindowStyle("dashboard") : undefined}
+        >
+          <div
+            className="window-title"
+            onMouseDown={(e) => handleMouseDown("dashboard", e)}
+          >
             <div className="flex items-center gap-2">
               <Monitor size={14} />
               <span className="text-sm">Fund Dashboard - Active</span>
@@ -369,21 +411,7 @@ export default function Dashboard() {
               </table>
             </div>
 
-            {/* Category Mix */}
-            <div className="grid grid-cols-3 gap-4">
-              {/* <div className="category-box">
-                <div className="text-sm font-medium">ARM</div>
-                <div className="text-xl font-bold">00.00%</div>
-              </div>
-              <div className="category-box">
-                <div className="text-sm font-medium">Floater</div>
-                <div className="text-xl font-bold">00.00%</div>
-              </div>
-              <div className="category-box">
-                <div className="text-sm font-medium">Fixed</div>
-                <div className="text-xl font-bold">00.00%</div>
-              </div> */}
-            </div>
+            <div className="grid grid-cols-3 gap-4"></div>
           </div>
         </div>
       )}
@@ -394,8 +422,14 @@ export default function Dashboard() {
           className={`window w-[800px] ${
             fundWindowMaximized ? "maximized" : ""
           }`}
+          style={
+            !fundWindowMaximized ? getWindowStyle(selectedFund.name) : undefined
+          }
         >
-          <div className="window-title">
+          <div
+            className="window-title"
+            onMouseDown={(e) => handleMouseDown(selectedFund.name, e)}
+          >
             <div className="flex items-center gap-2">
               <Monitor size={14} />
               <span className="text-sm">
@@ -526,8 +560,14 @@ export default function Dashboard() {
 
       {/* About Window */}
       {showAboutWindow && (
-        <div className="window w-[970px] h-[900]">
-          <div className="window-title" onMouseDown={handleMouseDown}>
+        <div
+          className="window w-[970px] h-[900]"
+          style={getWindowStyle("about")}
+        >
+          <div
+            className="window-title"
+            onMouseDown={(e) => handleMouseDown("about", e)}
+          >
             <div className="flex items-center gap-2">
               <img
                 src="/images/about-icon.png"
@@ -537,18 +577,6 @@ export default function Dashboard() {
               <span>About</span>
             </div>
             <div className="flex items-center gap-1">
-              {/* <button
-                className="minimize-button"
-                onClick={() => setShowAboutWindow(false)}
-              >
-                <span className="window-button-icon">_</span>
-              </button>
-              <button
-                className="maximize-button"
-                // onClick={() => setAboutWindowMaximized(!aboutWindowMaximized)}
-              >
-                <span className="window-button-icon">□</span>
-              </button> */}
               <button
                 className="close-button"
                 onClick={() => setShowAboutWindow(false)}
@@ -565,8 +593,14 @@ export default function Dashboard() {
 
       {/* Vision Window */}
       {showVisionWindow && (
-        <div className="window w-[970px] h-[900]">
-          <div className="window-title" onMouseDown={handleMouseDown}>
+        <div
+          className="window w-[970px] h-[900]"
+          style={getWindowStyle("vision")}
+        >
+          <div
+            className="window-title"
+            onMouseDown={(e) => handleMouseDown("vision", e)}
+          >
             <div className="flex items-center gap-2">
               <img
                 src="/images/vision-icon.png"
@@ -576,15 +610,6 @@ export default function Dashboard() {
               <span>Our Vision</span>
             </div>
             <div className="flex items-center gap-1">
-              {/* <button
-                className="minimize-button"
-                onClick={() => setShowVisionWindow(false)}
-              >
-                <span className="window-button-icon">_</span>
-              </button>
-              <button className="maximize-button">
-                <span className="window-button-icon">□</span>
-              </button> */}
               <button
                 className="close-button"
                 onClick={() => setShowVisionWindow(false)}
@@ -601,8 +626,11 @@ export default function Dashboard() {
 
       {/* Recycle Bin Window */}
       {showRecycleBin && (
-        <div className="window w-[500px]">
-          <div className="window-title" onMouseDown={handleMouseDown}>
+        <div className="window w-[500px]" style={getWindowStyle("recycle")}>
+          <div
+            className="window-title"
+            onMouseDown={(e) => handleMouseDown("recycle", e)}
+          >
             <div className="flex items-center gap-2">
               <img
                 src="/images/bin-icon.png"
@@ -612,15 +640,6 @@ export default function Dashboard() {
               <span>Recycle Bin</span>
             </div>
             <div className="flex items-center gap-1">
-              {/* <button
-                className="minimize-button"
-                onClick={() => setShowRecycleBin(false)}
-              >
-                <span className="window-button-icon">_</span>
-              </button>
-              <button className="maximize-button">
-                <span className="window-button-icon">□</span>
-              </button> */}
               <button
                 className="close-button"
                 onClick={() => setShowRecycleBin(false)}
