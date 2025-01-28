@@ -5,9 +5,9 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Hedgewater Fund - Management Console",
+  title: "HedgewaterDAO",
   description: "",
-  icons: "images/logo.png",
+  icons: "images/logo.jpeg",
 };
 
 export default function RootLayout({

@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getPnl(initialValue: number, currentValue: number) {
-  if (!initialValue) {
+  if (!currentValue) {
     return 0;
   }
   return currentValue - initialValue;

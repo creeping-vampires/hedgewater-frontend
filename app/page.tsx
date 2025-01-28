@@ -351,7 +351,7 @@ export default function Dashboard() {
               <div className="metric-box">
                 <div className="metric-label">TODAY&apos;S PNL</div>
                 <div className="metric-value">
-                  {formatUnits(totals.totalPnL)}
+                  {formatUnits(totals.todayPnl)}
                 </div>
               </div>
             </div>
@@ -456,7 +456,7 @@ export default function Dashboard() {
           </div>
           <div className="window-content">
             {/* Fund Metrics */}
-            <div className="grid grid-cols-4 gap-4 mb-4">
+            <div className="grid grid-cols-4 gap-4 mb-2">
               <div className="metric-box">
                 <div className="metric-label">TOTAL AUM</div>
                 <div className="metric-value">
@@ -476,7 +476,7 @@ export default function Dashboard() {
               <div className="metric-box">
                 <div className="metric-label">TODAY&apos;S PNL</div>
                 <div className="metric-value">
-                  {formatUnits(totals.totalPnL)}
+                  {formatUnits(totals.todayPnl)}
                 </div>
               </div>
             </div>
@@ -511,7 +511,9 @@ export default function Dashboard() {
                         .filter((asset) => asset.category === category)
                         .map((asset) => {
                           const currentValue =
-                            assetPrices?.[asset.symbol] === undefined
+                            asset.currentValue > 0
+                              ? asset.currentValue
+                              : assetPrices?.[asset.symbol] === undefined
                               ? 0
                               : asset.quantity * assetPrices[asset.symbol];
 
@@ -544,7 +546,7 @@ export default function Dashboard() {
                                 }`}
                               >
                                 {roi >= 0 ? "+" : ""}
-                                {roi.toFixed(4)}%
+                                {roi.toFixed(2)}%
                               </td>
                             </tr>
                           );

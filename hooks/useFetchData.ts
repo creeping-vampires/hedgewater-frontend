@@ -8,6 +8,9 @@ import { getPnl, getRoi } from "@/lib/utils";
 export function useFetchData() {
   // asset symbol to info mapping
   const [data, setData] = useState<{ [key: string]: number }>({});
+  const [prevDayPrices, setPreviousDayPrices] = useState<{
+    [key: string]: number;
+  }>({});
 
   var body = JSON.stringify({
     type: "tokenDetails",
@@ -42,15 +45,27 @@ export function useFetchData() {
         const results = responses.map((response) => response.data);
 
         const preparedData: any = {};
+        const previousDayPrices: any = {};
         fundsData[0].assets.forEach((asset, index) => {
           preparedData[asset.symbol] = results[index]?.midPx;
+          previousDayPrices[asset.symbol] = results[index]?.prevDayPx;
         });
         preparedData["USDC"] = 1;
+        preparedData["Head (Airdrop)"] = 1;
+
+        previousDayPrices["USDC"] = 1;
+
         // todo: fix hfun token price in the future
         preparedData["HWTR"] = 0.1207504;
-        preparedData["----"] = 1;
+        previousDayPrices["HWTR"] = 0.1023;
+
+        preparedData["████ Private Sale"] = 1;
+        previousDayPrices["████ Private Sale"] = 1;
+        previousDayPrices["Head (Airdrop)"] = 1;
 
         setData(preparedData);
+
+        setPreviousDayPrices(previousDayPrices);
 
         console.log("data is fetched ", results);
       } catch (error) {
@@ -79,14 +94,58 @@ export function useFetchData() {
     const totalCurrentUSD = fundsData[0].assets.reduce((acc, asset) => {
       const price = data[asset.symbol] === undefined ? 0 : data[asset.symbol];
 
-      console.log("total price ", price);
       const currentValue = price * asset.quantity;
       return acc + currentValue;
     }, 0);
 
-    console.log("total current ", totalCurrentUSD);
+    const totalPreviousDayUSD = fundsData[0].assets.reduce((acc, asset) => {
+      const price =
+        prevDayPrices[asset.symbol] === undefined
+          ? 0
+          : prevDayPrices[asset.symbol];
+
+      const currentValue = price * asset.quantity;
+      return acc + currentValue;
+    }, 0);
+
+    const todayPnl = fundsData[0].assets.reduce((acc, asset) => {
+      if (asset.symbol === "Head (Airdrop)") {
+        return acc + asset.currentValue;
+      }
+      const prevPrice =
+        asset.symbol === "HWTR"
+          ? 1
+          : prevDayPrices[asset.symbol] === undefined
+          ? 0
+          : prevDayPrices[asset.symbol];
+
+      const currPrice =
+        asset.symbol === "HWTR"
+          ? 1
+          : data[asset.symbol] === undefined
+          ? 0
+          : data[asset.symbol];
+
+      const currentValue = (currPrice - prevPrice) * asset.quantity;
+      const pnl = acc + currentValue;
+
+      console.log("pnl ", {
+        asset: asset.symbol,
+        pnl,
+      });
+      return pnl;
+    }, 0);
+
+    console.log("total current ", {
+      totalCurrentUSD,
+      totalPreviousDayUSD,
+      prevDayPrices,
+      todayPnl,
+    });
 
     const totalPnL = getPnl(totalInvestedUSD, totalCurrentUSD);
+
+    const total1DPnL = getPnl(totalPreviousDayUSD, totalCurrentUSD);
 
     const totalROI = getRoi(totalInvestedUSD, totalCurrentUSD);
 
@@ -96,6 +155,8 @@ export function useFetchData() {
       totalCurrentUSD,
       totalPnL,
       totalROI,
+      total1DPnL,
+      todayPnl,
     };
   }, [data]);
 
