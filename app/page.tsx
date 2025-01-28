@@ -42,7 +42,7 @@ export default function Dashboard() {
   const [isWindowOpen, setIsWindowOpen] = useState(true);
   const [isMaximized, setIsMaximized] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
-  const [isCommingSoonOpen, setCommingSoon] = useState(false);
+  const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
   const [showAboutWindow, setShowAboutWindow] = useState(false);
   const [showVisionWindow, setShowVisionWindow] = useState(false);
   const [showRecycleBin, setShowRecycleBin] = useState(false);
@@ -58,12 +58,10 @@ export default function Dashboard() {
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   const [startMenuOpen, setStartMenuOpen] = useState(false);
 
-  // Track positions for each window type
   const [windowPositions, setWindowPositions] = useState<{
     [key: string]: WindowPosition;
   }>({});
 
-  // Track drag state for each window type
   const [dragStates, setDragStates] = useState<{
     [key: string]: DragState;
   }>({});
@@ -198,9 +196,8 @@ export default function Dashboard() {
     }
   };
 
-  const openCommingSoon = (fund: FundDetails) => {
-    setCommingSoon(true);
-    setFundWindowMaximized(true);
+  const openCommingSoon = () => {
+    setIsComingSoonOpen(true);
   };
 
   const closeFundDetails = (fundName: string) => {
@@ -349,7 +346,7 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="metric-box">
-                <div className="metric-label">TODAY&apos;S PNL</div>
+                <div className="metric-label">TODAY'S PNL</div>
                 <div className="metric-value">
                   {formatUnits(totals.todayPnl)}
                 </div>
@@ -397,13 +394,13 @@ export default function Dashboard() {
                       <tr
                         key={fund.name}
                         className="hover:bg-blue-100 cursor-pointer"
-                        onClick={() => openCommingSoon(fund)}
+                        onClick={() => openCommingSoon()}
                       >
                         <td className="table-cell">{fund.name}</td>
-                        <td className="table-cell ">***</td>
-                        <td className="table-cell ">***</td>
-                        <td className="table-cell ">***</td>
-                        <td className="table-cell ">***</td>
+                        <td className="table-cell">***</td>
+                        <td className="table-cell">***</td>
+                        <td className="table-cell">***</td>
+                        <td className="table-cell">***</td>
                       </tr>
                     );
                   })}
@@ -474,7 +471,7 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="metric-box">
-                <div className="metric-label">TODAY&apos;S PNL</div>
+                <div className="metric-label">TODAY'S PNL</div>
                 <div className="metric-value">
                   {formatUnits(totals.todayPnl)}
                 </div>
@@ -556,6 +553,19 @@ export default function Dashboard() {
                 </div>
               </div>
             ))}
+
+            {/* OnChain Wallets Section */}
+            <div className="mt-2">
+              <h3 className="text-sm font-semibold mb-1">OnChain Wallets</h3>
+              <div className="text-xs text-gray-600">
+                <span className="font-mono">
+                  0xac5fFf941DFFbCb35171146e6232125EEd6a8829
+                </span>
+                <span className="font-mono">
+                  , 0xFE490091ddf532334C9Ff1faB6f53C175e464d3c
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -653,6 +663,30 @@ export default function Dashboard() {
           <div className="window-content">
             <p className="text-center text-gray-500 mt-8">
               Recycle Bin is empty
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Coming Soon Popup */}
+      {isComingSoonOpen && (
+        <div className="coming-soon-popup">
+          <div className="window-title">
+            <div className="flex items-center gap-2">
+              <Monitor size={14} />
+              <span>Coming Soon</span>
+            </div>
+            <button
+              className="close-button"
+              onClick={() => setIsComingSoonOpen(false)}
+            >
+              <span className="window-button-icon">×</span>
+            </button>
+          </div>
+          <div className="text-center">
+            <p className="text-lg font-semibold mb-2">Coming Soon!</p>
+            <p className="text-sm text-gray-600">
+              This fund is currently under reseach and will be available soon.
             </p>
           </div>
         </div>

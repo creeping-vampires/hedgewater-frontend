@@ -129,19 +129,19 @@ export function useFetchData() {
       const currentValue = (currPrice - prevPrice) * asset.quantity;
       const pnl = acc + currentValue;
 
-      console.log("pnl ", {
-        asset: asset.symbol,
-        pnl,
-      });
+      // console.log("pnl ", {
+      //   asset: asset.symbol,
+      //   pnl,
+      // });
       return pnl;
     }, 0);
 
-    console.log("total current ", {
-      totalCurrentUSD,
-      totalPreviousDayUSD,
-      prevDayPrices,
-      todayPnl,
-    });
+    // console.log("total current ", {
+    //   totalCurrentUSD,
+    //   totalPreviousDayUSD,
+    //   prevDayPrices,
+    //   todayPnl,
+    // });
 
     const totalPnL = getPnl(totalInvestedUSD, totalCurrentUSD);
 
