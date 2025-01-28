@@ -479,7 +479,7 @@ export default function Dashboard() {
             </div>
 
             {/* Fund Categories */}
-            {["HL Listed", "Pre-bonded", "Treasury Swap"].map((category) => (
+            {["HL Listed", "Pre-bonded", "Treasury"].map((category) => (
               <div key={category} className="mb-6">
                 <h3 className="text-lg font-semibold mb-2 px-2 py-1 bg-[#d4d0c8] border border-[#848484]">
                   {category}

@@ -5,7 +5,7 @@ export interface Asset {
   initialValue: number;
   pnl: number;
   roi: number;
-  category: "HL Listed" | "Pre-bonded" | "Treasury Swap";
+  category: "HL Listed" | "Pre-bonded" | "Treasury";
   tokenAddress?: string | undefined; //
 }
 
@@ -54,7 +54,7 @@ export const fundsData: FundDetails[] = [
         currentValue: 0,
         pnl: 0,
         roi: 0,
-        category: "Treasury Swap",
+        category: "Treasury",
       },
       {
         symbol: "████ Private Sale",
@@ -63,7 +63,7 @@ export const fundsData: FundDetails[] = [
         currentValue: 10000,
         pnl: 0,
         roi: 0,
-        category: "Treasury Swap",
+        category: "Treasury",
       },
       {
         symbol: "HEAD (Airdrop)",
