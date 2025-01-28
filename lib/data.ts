@@ -66,7 +66,7 @@ export const fundsData: FundDetails[] = [
         category: "Treasury Swap",
       },
       {
-        symbol: "Head (Airdrop)",
+        symbol: "HEAD (Airdrop)",
         quantity: 17300,
         initialValue: 0,
         currentValue: 37887,
