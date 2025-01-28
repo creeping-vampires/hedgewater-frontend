@@ -376,7 +376,7 @@ export default function Dashboard() {
                         >
                           <td className="table-cell">{fund.name}</td>
                           <td className="table-cell text-green-600">
-                            {formatCurrency(totals.totalInvestedUSD)}
+                            {formatCurrency("80000")}
                           </td>
                           <td className="table-cell text-green-600">
                             {formatCurrency(totals.totalCurrentUSD)}
