@@ -109,7 +109,7 @@ export function useFetchData() {
     }, 0);
 
     const todayPnl = fundsData[0].assets.reduce((acc, asset) => {
-      if (asset.symbol === "Head (Airdrop)") {
+      if (asset.symbol === "HEAD (Airdrop)") {
         return acc + asset.currentValue;
       }
       const prevPrice =
