@@ -46,6 +46,7 @@ export default function Dashboard() {
   const [showAboutWindow, setShowAboutWindow] = useState(false);
   const [showVisionWindow, setShowVisionWindow] = useState(false);
   const [showRecycleBin, setShowRecycleBin] = useState(false);
+  const [fundWindowMinimized, setFundWindowMinimized] = useState(false);
 
   const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedFund, setSelectedFund] = useState<FundDetails | null>(null);
@@ -233,74 +234,72 @@ export default function Dashboard() {
           style={{ height: 100 }}
           src="/images/watermark.png"
           alt="Watermark"
+          className="hidden md:block"
         />
       </div>
 
-      <div className="flex flex-col">
-        <div className="p-8">
-          <div
-            className="desktop-icon"
-            onDoubleClick={() => {
-              setIsWindowOpen(true);
-              setIsMinimized(false);
-            }}
-          >
-            <img
-              style={{ height: 64 }}
-              src="/images/dashboard-icon.png"
-              alt="Fund Icon"
-            />
-            <span className="text-center">Dashboard</span>
-          </div>
+      <div className="grid grid-cols-2 md:grid-cols-1 gap-4 p-4 md:p-8">
+        <div
+          className="desktop-icon"
+          onDoubleClick={() => {
+            setIsWindowOpen(true);
+            setIsMinimized(false);
+          }}
+        >
+          <img
+            style={{ height: 48 }}
+            className="md:h-16"
+            src="/images/dashboard-icon.png"
+            alt="Fund Icon"
+          />
+          <span className="text-center">Dashboard</span>
         </div>
 
-        <div className="p-8">
-          <div
-            className="desktop-icon"
-            onDoubleClick={() => setShowAboutWindow(true)}
-          >
-            <img
-              style={{ height: 64 }}
-              src="/images/about-icon.png"
-              alt="About Icon"
-            />
-            <span className="text-center">About</span>
-          </div>
+        <div
+          className="desktop-icon"
+          onDoubleClick={() => setShowAboutWindow(true)}
+        >
+          <img
+            style={{ height: 48 }}
+            className="md:h-16"
+            src="/images/about-icon.png"
+            alt="About Icon"
+          />
+          <span className="text-center">About</span>
         </div>
 
-        <div className="p-8">
-          <div
-            className="desktop-icon"
-            onDoubleClick={() => setShowVisionWindow(true)}
-          >
-            <img
-              style={{ height: 64 }}
-              src="/images/vision-icon.png"
-              alt="Vision Icon"
-            />
-            <span className="text-center">Our Vision</span>
-          </div>
+        <div
+          className="desktop-icon"
+          onDoubleClick={() => setShowVisionWindow(true)}
+        >
+          <img
+            style={{ height: 48 }}
+            className="md:h-16"
+            src="/images/vision-icon.png"
+            alt="Vision Icon"
+          />
+          <span className="text-center">Our Vision</span>
         </div>
 
-        <div className="p-8">
-          <div
-            className="desktop-icon"
-            onDoubleClick={() => setShowRecycleBin(true)}
-          >
-            <img
-              style={{ height: 64 }}
-              src="/images/bin-icon.png"
-              alt="Recycle Bin"
-            />
-            <span className="text-center">Recycle Bin</span>
-          </div>
+        <div
+          className="desktop-icon"
+          onDoubleClick={() => setShowRecycleBin(true)}
+        >
+          <img
+            style={{ height: 48 }}
+            className="md:h-16"
+            src="/images/bin-icon.png"
+            alt="Recycle Bin"
+          />
+          <span className="text-center">Recycle Bin</span>
         </div>
       </div>
 
-      {/* Main Dashboard Window */}
       {isWindowOpen && !isMinimized && (
         <div
-          className={`window w-[1024px] ${isMaximized ? "maximized" : ""}`}
+          className={`window w-full md:w-[1024px] h-[calc(100vh-40px)] md:h-auto overflow-auto ${
+            isMaximized ? "maximized" : ""
+          }`}
           style={!isMaximized ? getWindowStyle("dashboard") : undefined}
         >
           <div
@@ -327,85 +326,87 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="window-content">
-            {/* Key Metrics */}
-            <div className="grid grid-cols-4 gap-4 mb-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
               <div className="metric-box">
                 <div className="metric-label">TOTAL AUM</div>
-                <div className="metric-value">
+                <div className="metric-value text-base md:text-lg">
                   {formatUnits(totals.totalCurrentUSD)}
                 </div>
               </div>
               <div className="metric-box">
                 <div className="metric-label">TOTAL ASSETS</div>
-                <div className="metric-value">{totals.totalAssets}</div>
+                <div className="metric-value text-base md:text-lg">
+                  {totals.totalAssets}
+                </div>
               </div>
               <div className="metric-box">
                 <div className="metric-label">YTD PNL</div>
-                <div className="metric-value">
+                <div className="metric-value text-base md:text-lg">
                   {formatUnits(totals.totalPnL)}
                 </div>
               </div>
               <div className="metric-box">
                 <div className="metric-label">TODAY'S PNL</div>
-                <div className="metric-value">
+                <div className="metric-value text-base md:text-lg">
                   {formatUnits(totals.todayPnl)}
                 </div>
               </div>
             </div>
 
-            {/* Fund Performance Table */}
-            <div className="table-container mb-4">
-              <table className="w-full">
-                <thead>
-                  <tr>
-                    <th className="table-header">FUND</th>
-                    <th className="table-header">Invested</th>
-                    <th className="table-header">Current Value</th>
-                    <th className="table-header">LAST MONTH</th>
-                    <th className="table-header">PNL</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {fundsData.map((fund: any) => {
-                    if (fund.name === "Genesis I") {
+            <div className="overflow-x-auto">
+              <div className="table-container mb-4 min-w-[600px]">
+                <table className="w-full">
+                  <thead>
+                    <tr>
+                      <th className="table-header">FUND</th>
+                      <th className="table-header">Invested</th>
+                      <th className="table-header">Current Value</th>
+                      <th className="table-header">LAST MONTH</th>
+                      <th className="table-header">PNL</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {fundsData.map((fund: any) => {
+                      if (fund.name === "Genesis I") {
+                        return (
+                          <tr
+                            key={fund.name}
+                            className="hover:bg-blue-100 cursor-pointer"
+                            onClick={() => openFundDetails(fund)}
+                          >
+                            <td className="table-cell">{fund.name}</td>
+                            <td className="table-cell text-green-600">
+                              {formatCurrency("80000")}
+                            </td>
+                            <td className="table-cell text-green-600">
+                              {formatCurrency(totals.totalCurrentUSD)}
+                            </td>
+                            <td className="table-cell text-green-600">
+                              {formatCurrency(totals.totalCurrentUSD)}
+                            </td>
+                            <td className="table-cell text-green-600">
+                              {formatCurrency(totals.totalPnL)}
+                            </td>
+                          </tr>
+                        );
+                      }
                       return (
                         <tr
                           key={fund.name}
                           className="hover:bg-blue-100 cursor-pointer"
-                          onClick={() => openFundDetails(fund)}
+                          onClick={() => openCommingSoon()}
                         >
                           <td className="table-cell">{fund.name}</td>
-                          <td className="table-cell text-green-600">
-                            {formatCurrency("80000")}
-                          </td>
-                          <td className="table-cell text-green-600">
-                            {formatCurrency(totals.totalCurrentUSD)}
-                          </td>
-                          <td className="table-cell text-green-600">
-                            {formatCurrency(totals.totalCurrentUSD)}
-                          </td>
-                          <td className="table-cell text-green-600">
-                            {formatCurrency(totals.totalPnL)}
-                          </td>
+                          <td className="table-cell">***</td>
+                          <td className="table-cell">***</td>
+                          <td className="table-cell">***</td>
+                          <td className="table-cell">***</td>
                         </tr>
                       );
-                    }
-                    return (
-                      <tr
-                        key={fund.name}
-                        className="hover:bg-blue-100 cursor-pointer"
-                        onClick={() => openCommingSoon()}
-                      >
-                        <td className="table-cell">{fund.name}</td>
-                        <td className="table-cell">***</td>
-                        <td className="table-cell">***</td>
-                        <td className="table-cell">***</td>
-                        <td className="table-cell">***</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             <div className="grid grid-cols-3 gap-4"></div>
@@ -413,167 +414,211 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Fund Details Windows */}
-      {selectedFund && openWindows.includes(selectedFund.name) && (
-        <div
-          className={`window w-[800px] ${
-            fundWindowMaximized ? "maximized" : ""
-          }`}
-          style={
-            !fundWindowMaximized ? getWindowStyle(selectedFund.name) : undefined
-          }
-        >
+      {selectedFund &&
+        openWindows.includes(selectedFund.name) &&
+        !fundWindowMinimized && (
           <div
-            className="window-title"
-            onMouseDown={(e) => handleMouseDown(selectedFund.name, e)}
+            className={`window w-full md:w-[800px] h-[calc(100vh-40px)] md:h-auto overflow-auto ${
+              fundWindowMaximized ? "maximized" : ""
+            }`}
+            style={
+              !fundWindowMaximized
+                ? getWindowStyle(selectedFund.name)
+                : undefined
+            }
           >
-            <div className="flex items-center gap-2">
-              <Monitor size={14} />
-              <span className="text-sm">
-                {selectedFund.name} - Fund Details
-              </span>
-            </div>
-            <div className="flex items-center gap-1">
-              <button className="minimize-button">
-                <span className="window-button-icon">_</span>
-              </button>
-              <button
-                className="maximize-button"
-                onClick={toggleFundWindowMaximize}
-              >
-                <span className="window-button-icon">□</span>
-              </button>
-              <button
-                className="close-button"
-                onClick={() => closeFundDetails(selectedFund.name)}
-              >
-                <span className="window-button-icon">×</span>
-              </button>
-            </div>
-          </div>
-          <div className="window-content">
-            {/* Fund Metrics */}
-            <div className="grid grid-cols-4 gap-4 mb-2">
-              <div className="metric-box">
-                <div className="metric-label">TOTAL AUM</div>
-                <div className="metric-value">
-                  {formatUnits(totals.totalCurrentUSD)}
-                </div>
+            <div
+              className="window-title"
+              onMouseDown={(e) => handleMouseDown(selectedFund.name, e)}
+            >
+              <div className="flex items-center gap-2">
+                <Monitor size={14} />
+                <span className="text-sm">
+                  {selectedFund.name} - Fund Details
+                </span>
               </div>
-              <div className="metric-box">
-                <div className="metric-label">TOTAL ASSETS</div>
-                <div className="metric-value">{totals.totalAssets}</div>
-              </div>
-              <div className="metric-box">
-                <div className="metric-label">YTD PNL</div>
-                <div className="metric-value">
-                  {formatUnits(totals.totalPnL)}
-                </div>
-              </div>
-              <div className="metric-box">
-                <div className="metric-label">TODAY'S PNL</div>
-                <div className="metric-value">
-                  {formatUnits(totals.todayPnl)}
-                </div>
+              <div className="flex items-center gap-1">
+                <button
+                  className="minimize-button"
+                  onClick={() => setFundWindowMinimized(true)}
+                >
+                  <span className="window-button-icon">_</span>
+                </button>
+                <button
+                  className="maximize-button"
+                  onClick={toggleFundWindowMaximize}
+                >
+                  <span className="window-button-icon">□</span>
+                </button>
+                <button
+                  className="close-button"
+                  onClick={() => closeFundDetails(selectedFund.name)}
+                >
+                  <span className="window-button-icon">×</span>
+                </button>
               </div>
             </div>
+            <div className="window-content p-2 md:p-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mb-2">
+                <div className="metric-box">
+                  <div className="metric-label text-xs md:text-sm">
+                    TOTAL AUM
+                  </div>
+                  <div className="metric-value text-sm md:text-lg">
+                    {formatUnits(totals.totalCurrentUSD)}
+                  </div>
+                </div>
+                <div className="metric-box">
+                  <div className="metric-label text-xs md:text-sm">
+                    TOTAL ASSETS
+                  </div>
+                  <div className="metric-value text-sm md:text-lg">
+                    {totals.totalAssets}
+                  </div>
+                </div>
+                <div className="metric-box">
+                  <div className="metric-label text-xs md:text-sm">YTD PNL</div>
+                  <div className="metric-value text-sm md:text-lg">
+                    {formatUnits(totals.totalPnL)}
+                  </div>
+                </div>
+                <div className="metric-box">
+                  <div className="metric-label text-xs md:text-sm">
+                    TODAY'S PNL
+                  </div>
+                  <div className="metric-value text-sm md:text-lg">
+                    {formatUnits(totals.todayPnl)}
+                  </div>
+                </div>
+              </div>
 
-            {/* Fund Categories */}
-            {["HL Listed", "Pre-bonded", "Treasury"].map((category) => (
-              <div key={category} className="mb-6">
-                <h3 className="text-lg font-semibold mb-2 px-2 py-1 bg-[#d4d0c8] border border-[#848484]">
-                  {category}
-                </h3>
-                <div className="table-container">
-                  <table className="w-full">
-                    <thead>
-                      <tr>
-                        <th className="table-header">ASSET</th>
-                        <th className="table-header">QUANTITY</th>
-                        <th className="table-header">INITIAL VALUE</th>
-                        <th className="table-header">CURRENT VALUE</th>
-                        <th className="table-header">PNL</th>
-                        <th className="table-header">ROI</th>
-                      </tr>
-                    </thead>
-                    {selectedFund.assets.filter(
-                      (asset) => asset.category === category
-                    ).length === 0 && (
-                      <h3 className="text-lg text-center font-semibold mb-2 px-2 py-1 ">
-                        No assets
-                      </h3>
-                    )}
-                    <tbody>
-                      {selectedFund.assets
-                        .filter((asset) => asset.category === category)
-                        .map((asset) => {
-                          const currentValue =
-                            asset.currentValue > 0
-                              ? asset.currentValue
-                              : assetPrices?.[asset.symbol] === undefined
-                              ? 0
-                              : asset.quantity * assetPrices[asset.symbol];
-
-                          const pnl = getPnl(asset.initialValue, currentValue);
-                          const roi = getRoi(asset.initialValue, currentValue);
-
-                          return (
-                            <tr key={asset.symbol}>
-                              <td className="table-cell">{asset.symbol}</td>
-                              <td className="table-cell">
-                                {asset.quantity.toLocaleString()}
-                              </td>
-                              <td className="table-cell">
-                                {formatCurrency(asset.initialValue)}
-                              </td>
-                              <td className="table-cell">
-                                {formatCurrency(currentValue)}
-                              </td>
-                              <td
-                                className={`table-cell ${
-                                  pnl >= 0 ? "text-green-500" : "text-red-500"
-                                }`}
-                              >
-                                {pnl >= 0 ? "+" : ""}
-                                {formatCurrency(pnl)}
-                              </td>
-                              <td
-                                className={`table-cell ${
-                                  roi >= 0 ? "text-green-500" : "text-red-500"
-                                }`}
-                              >
-                                {roi >= 0 ? "+" : ""}
-                                {roi.toFixed(2)}%
+              {["HL Listed", "Pre-bonded", "Treasury"].map((category) => (
+                <div key={category} className="mb-4 md:mb-6">
+                  <h3 className="text-sm font-semibold mb-2 px-2 py-1 bg-[#d4d0c8] border border-[#848484]">
+                    {category}
+                  </h3>
+                  <div className="overflow-x-auto">
+                    <div className="table-container min-w-[600px]">
+                      <table className="w-full">
+                        <thead>
+                          <tr>
+                            <th className="table-header text-xs md:text-sm">
+                              ASSET
+                            </th>
+                            <th className="table-header text-xs md:text-sm">
+                              QUANTITY
+                            </th>
+                            <th className="table-header text-xs md:text-sm">
+                              INITIAL VALUE
+                            </th>
+                            <th className="table-header text-xs md:text-sm">
+                              CURRENT VALUE
+                            </th>
+                            <th className="table-header text-xs md:text-sm">
+                              PNL
+                            </th>
+                            <th className="table-header text-xs md:text-sm">
+                              ROI
+                            </th>
+                          </tr>
+                        </thead>
+                        {selectedFund.assets.filter(
+                          (asset) => asset.category === category
+                        ).length === 0 && (
+                          <tbody>
+                            <tr>
+                              <td colSpan={6}>
+                                <h3 className="text-sm text-center font-semibold py-4">
+                                  No assets
+                                </h3>
                               </td>
                             </tr>
-                          );
-                        })}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            ))}
+                          </tbody>
+                        )}
+                        <tbody>
+                          {selectedFund.assets
+                            .filter((asset) => asset.category === category)
+                            .map((asset) => {
+                              const currentValue =
+                                asset.currentValue > 0
+                                  ? asset.currentValue
+                                  : assetPrices?.[asset.symbol] === undefined
+                                  ? 0
+                                  : asset.quantity * assetPrices[asset.symbol];
 
-            {/* OnChain Wallets Section */}
-            <div className="mt-2">
-              <h3 className="text-sm font-semibold mb-1">OnChain Wallets</h3>
-              <div className="text-xs text-gray-600">
-                <span className="font-mono">
-                  0xac5fFf941DFFbCb35171146e6232125EEd6a8829
-                </span>
-                <span className="font-mono">
-                  , 0xFE490091ddf532334C9Ff1faB6f53C175e464d3c
-                </span>
+                              const pnl = getPnl(
+                                asset.initialValue,
+                                currentValue
+                              );
+                              const roi = getRoi(
+                                asset.initialValue,
+                                currentValue
+                              );
+
+                              return (
+                                <tr key={asset.symbol}>
+                                  <td className="table-cell text-xs md:text-sm">
+                                    {asset.symbol}
+                                  </td>
+                                  <td className="table-cell text-xs md:text-sm">
+                                    {asset.quantity.toLocaleString()}
+                                  </td>
+                                  <td className="table-cell text-xs md:text-sm">
+                                    {formatCurrency(asset.initialValue)}
+                                  </td>
+                                  <td className="table-cell text-xs md:text-sm">
+                                    {formatCurrency(currentValue)}
+                                  </td>
+                                  <td
+                                    className={`table-cell text-xs md:text-sm ${
+                                      pnl >= 0
+                                        ? "text-green-500"
+                                        : "text-red-500"
+                                    }`}
+                                  >
+                                    {pnl >= 0 ? "+" : ""}
+                                    {formatCurrency(pnl)}
+                                  </td>
+                                  <td
+                                    className={`table-cell text-xs md:text-sm ${
+                                      roi >= 0
+                                        ? "text-green-500"
+                                        : "text-red-500"
+                                    }`}
+                                  >
+                                    {roi >= 0 ? "+" : ""}
+                                    {roi.toFixed(2)}%
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              <div className="mt-4 md:mt-6 px-2">
+                <h3 className="text-xs md:text-sm font-semibold mb-1">
+                  OnChain Wallets
+                </h3>
+                <div className="text-xs text-gray-600 break-all">
+                  <span className="font-mono">
+                    0xac5fFf941DFFbCb35171146e6232125EEd6a8829
+                  </span>
+                  <span className="font-mono">
+                    , 0xFE490091ddf532334C9Ff1faB6f53C175e464d3c
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* About Window */}
       {showAboutWindow && (
         <div
-          className="window w-[970px] h-[900]"
+          className="window w-full md:w-[970px] h-[calc(100vh-40px)] md:h-auto overflow-auto"
           style={getWindowStyle("about")}
         >
           <div
@@ -603,10 +648,9 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Vision Window */}
       {showVisionWindow && (
         <div
-          className="window w-[970px] h-[900]"
+          className="window w-full md:w-[970px] h-[calc(100vh-40px)] md:h-auto overflow-auto"
           style={getWindowStyle("vision")}
         >
           <div
@@ -636,9 +680,11 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Recycle Bin Window */}
       {showRecycleBin && (
-        <div className="window w-[500px]" style={getWindowStyle("recycle")}>
+        <div
+          className="window w-full md:w-[500px] h-[calc(100vh-40px)] md:h-auto overflow-auto"
+          style={getWindowStyle("recycle")}
+        >
           <div
             className="window-title"
             onMouseDown={(e) => handleMouseDown("recycle", e)}
@@ -668,7 +714,6 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Coming Soon Popup */}
       {isComingSoonOpen && (
         <div className="coming-soon-popup">
           <div className="window-title">
@@ -686,17 +731,17 @@ export default function Dashboard() {
           <div className="text-center">
             <p className="text-lg font-semibold mb-2">Coming Soon!</p>
             <p className="text-sm text-gray-600">
-              This fund is currently under reseach and will be available soon.
+              This fund is currently under development and will be available
+              soon.
             </p>
           </div>
         </div>
       )}
 
-      {/* Start Menu */}
       {startMenuOpen && (
-        <div className="start-menu">
+        <div className="start-menu w-full md:w-[250px]">
           <div className="start-menu-header">
-            <img src="/images/logo.jpeg" alt="Logo" className="w-8 h-8" />
+            <img src="/images/logo.png" alt="Logo" className="w-8 h-8" />
             <span className="start-menu-user">Hedgewater Fund</span>
           </div>
           <div className="start-menu-items">
@@ -748,58 +793,70 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Taskbar */}
-      <div className="taskbar">
+      <div className="taskbar h-10 md:h-12">
         <button
-          className="start-button"
+          className="start-button h-full"
           onClick={() => setStartMenuOpen(!startMenuOpen)}
         >
           <img
-            style={{ height: 20 }}
+            className="h-5 md:h-6"
             src="/images/start-icon.png"
             alt="Start Icon"
           />
-          Start
+          <span className="hidden md:inline">Start</span>
         </button>
-        {openWindows.map((window) =>
-          window === "dashboard" && isWindowOpen ? (
-            <button
-              key={window}
-              className={`taskbar-item ${!isMinimized ? "active" : ""}`}
-              onClick={() => {
-                if (isMinimized) {
-                  setIsMinimized(false);
-                } else {
-                  setIsMinimized(true);
-                }
-              }}
-            >
-              <img
-                style={{ height: 16 }}
-                src="/images/dashboard-icon.png"
-                alt="Fund Icon"
-              />
-              Fund Dashboard
-            </button>
-          ) : (
-            window !== "dashboard" && (
+
+        <div className="flex-1 overflow-x-auto">
+          {openWindows.map((window) =>
+            window === "dashboard" && isWindowOpen ? (
               <button
                 key={window}
-                className="taskbar-item"
-                onClick={() =>
-                  setSelectedFund(
-                    fundsData.find((f) => f.name === window) || null
-                  )
-                }
+                className={`taskbar-item truncate ${
+                  !isMinimized ? "active" : ""
+                }`}
+                onClick={() => {
+                  if (isMinimized) {
+                    setIsMinimized(false);
+                  } else {
+                    setIsMinimized(true);
+                  }
+                }}
               >
-                <Monitor size={16} />
-                {window}
+                <img
+                  className="h-4 md:h-5"
+                  src="/images/dashboard-icon.png"
+                  alt="Fund Icon"
+                />
+                <span className="hidden md:inline">Fund Dashboard</span>
               </button>
+            ) : (
+              window !== "dashboard" && (
+                <button
+                  key={window}
+                  className={`taskbar-item truncate ${
+                    selectedFund?.name === window && !fundWindowMinimized
+                      ? "active"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    if (fundWindowMinimized) {
+                      setFundWindowMinimized(false);
+                    } else {
+                      setSelectedFund(
+                        fundsData.find((f) => f.name === window) || null
+                      );
+                    }
+                  }}
+                >
+                  <Monitor className="h-4 w-4 md:h-5 md:w-5" />
+                  <span className="hidden md:inline">{window}</span>
+                </button>
+              )
             )
-          )
-        )}
-        <div className="flex-1" />
-        <div className="clock" suppressHydrationWarning>
+          )}
+        </div>
+
+        <div className="clock text-xs md:text-sm" suppressHydrationWarning>
           {formatTime(currentTime)}
         </div>
       </div>
