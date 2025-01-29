@@ -2,25 +2,13 @@ import React from "react";
 import { Heart, Share2, MessageCircle, BarChart2 } from "lucide-react";
 
 const AboutArticle = () => {
-  //   const StatItem = ({ icon: Icon, count }) => (
-  //     <div className="flex items-center gap-2 text-gray-600">
-  //       <Icon size={18} />
-  //       <span>{count}</span>
-  //     </div>
-  //   );
-
   return (
-    <div className="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-sm h-96 overflow-y-auto mt-8">
+    <div className="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-sm md:h-96 h-full overflow-y-auto md:mt-8">
       <h1 className="text-2xl font-bold mb-4">
         First AI investment DAO on HyperLiquid
       </h1>
 
-      <div className="flex gap-6 mb-6">
-        {/* <StatItem icon={MessageCircle} count="18" />
-        <StatItem icon={Share2} count="50" />
-        <StatItem icon={Heart} count="261" />
-        <StatItem icon={BarChart2} count="38K" /> */}
-      </div>
+      <div className="flex gap-6 mb-6"></div>
 
       <div className="space-y-6 text-gray-800">
         <section>

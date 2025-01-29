@@ -25,16 +25,16 @@ body {
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
-    bottom: 40px !important;
+    bottom: 48px !important;
     transform: none !important;
     width: 100% !important;
-    height: calc(100vh - 40px) !important;
-    max-height: calc(100vh - 40px) !important;
+    height: calc(100vh - 48px) !important;
+    max-height: calc(100vh - 48px) !important;
     overflow: auto !important;
   }
 
   .window-content {
-    height: calc(100% - 30px) !important;
+    height: calc(100% - 18px) !important;
     overflow: auto !important;
     padding: 8px !important;
   }
@@ -57,7 +57,7 @@ body {
 .window {
   @apply bg-[#d4d0c8] overflow-hidden;
   border: 1px solid var(--win-border);
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 1px 1px 0px #FFFFFF, inset -1px -1px 0px #808080;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -75,7 +75,9 @@ body {
 .window-title {
   background: var(--win-title-active);
   @apply text-white px-1.5 py-0.5 flex items-center justify-between select-none cursor-move;
-  height: 20px;
+  height: 18px;
+  font-family: Tahoma, sans-serif;
+  font-size: 11px;
 }
 
 .window-title.inactive {
@@ -83,7 +85,9 @@ body {
 }
 
 .window-title span {
-  @apply text-xs;
+  @apply text-[11px] font-normal;
+  font-family: Tahoma, sans-serif;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
 }
 
 .window-content {
@@ -270,12 +274,13 @@ body {
   @apply flex items-center justify-center text-black;
   width: 16px;
   height: 14px;
-  margin: 2px;
+  margin: 2px 1px;
   background: linear-gradient(180deg, #fff 0%, #ecebe5 50%, #e3e2dd 50%, #e3e2dd 100%);
   border-width: 1px;
   border-style: solid;
   border-color: #fff #404040 #404040 #fff;
   box-shadow: 1px 1px 0 #dfdfdf inset, -1px -1px 0 #808080 inset;
+  padding: 0;
 }
 
 .minimize-button:hover, .maximize-button:hover {
@@ -284,6 +289,7 @@ body {
 
 .close-button {
   background: linear-gradient(180deg, #f1f1ef 0%, #e3e2dd 50%, #d6d2c9 50%, #d6d2c9 100%);
+  margin-right: 2px;
 }
 
 .close-button:hover {
@@ -293,8 +299,9 @@ body {
 }
 
 .window-button-icon {
-  @apply flex items-center justify-center text-[10px] font-bold leading-none;
+  @apply flex items-center justify-center text-[8px] font-bold leading-none;
   height: 12px;
   width: 12px;
   margin-top: -1px;
+  font-family: "Tahoma", sans-serif;
 }
