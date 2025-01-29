@@ -71,7 +71,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentTime(new Date(new Date().toLocaleDateString()));
+      setCurrentTime(new Date());
     }, 1000);
     return () => clearInterval(timer);
   }, []);
