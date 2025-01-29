@@ -2,13 +2,12 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { Monitor } from "lucide-react";
-import { ResponsiveChart } from "@/components/ResponsiveChart";
 import { FundDetails, fundsData } from "@/lib/data";
 import { useFetchData } from "@/hooks/useFetchData";
 import { formatUnits, getPnl, getRoi } from "@/lib/utils";
-import { format } from "node:path";
 import AboutArticle from "@/components/AboutArticle";
 import OurVisionArticle from "@/components/OurVision";
+import Time from "@/components/Time";
 
 const returnsData = [
   { date: "1/07", value: -5 },
@@ -48,7 +47,6 @@ export default function Dashboard() {
   const [showRecycleBin, setShowRecycleBin] = useState(false);
   const [fundWindowMinimized, setFundWindowMinimized] = useState(false);
 
-  const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedFund, setSelectedFund] = useState<FundDetails | null>(null);
   const [openWindows, setOpenWindows] = useState<string[]>(["dashboard"]);
   const [fundWindowMaximized, setFundWindowMaximized] = useState(false);
@@ -70,13 +68,6 @@ export default function Dashboard() {
   const { assetPrices, totals } = useFetchData();
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       if (!target.closest(".start-button") && !target.closest(".start-menu")) {
@@ -87,14 +78,6 @@ export default function Dashboard() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
-  };
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -856,9 +839,7 @@ export default function Dashboard() {
           )}
         </div>
 
-        <div className="clock text-xs md:text-sm" suppressHydrationWarning>
-          {formatTime(currentTime)}
-        </div>
+        <Time />
       </div>
     </div>
   );
