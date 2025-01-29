@@ -238,7 +238,7 @@ export default function Dashboard() {
         />
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-1 gap-4 p-4 md:p-8">
+      <div className="grid grid-cols-1 md:grid-cols-1 gap-4 p-4 md:p-8">
         <div
           className="desktop-icon"
           onDoubleClick={() => {
