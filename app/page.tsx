@@ -741,7 +741,7 @@ export default function Dashboard() {
       {startMenuOpen && (
         <div className="start-menu w-full md:w-[250px]">
           <div className="start-menu-header">
-            <img src="/images/logo.png" alt="Logo" className="w-8 h-8" />
+            <img src="/images/logo.jpeg" alt="Logo" className="w-8 h-8" />
             <span className="start-menu-user">Hedgewater Fund</span>
           </div>
           <div className="start-menu-items">
