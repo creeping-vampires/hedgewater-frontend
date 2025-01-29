@@ -75,9 +75,9 @@ body {
 .window-title {
   background: var(--win-title-active);
   @apply text-white px-1.5 py-0.5 flex items-center justify-between select-none cursor-move;
-  height: 18px;
+  height: 22px;
   font-family: Tahoma, sans-serif;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .window-title.inactive {
@@ -85,7 +85,7 @@ body {
 }
 
 .window-title span {
-  @apply text-[11px] font-normal;
+  @apply text-[12px] font-normal;
   font-family: Tahoma, sans-serif;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
 }
@@ -272,8 +272,8 @@ body {
 
 .minimize-button, .maximize-button, .close-button {
   @apply flex items-center justify-center text-black;
-  width: 16px;
-  height: 14px;
+  width: 20px;
+  height: 18px;
   margin: 2px 1px;
   background: linear-gradient(180deg, #fff 0%, #ecebe5 50%, #e3e2dd 50%, #e3e2dd 100%);
   border-width: 1px;
@@ -299,9 +299,9 @@ body {
 }
 
 .window-button-icon {
-  @apply flex items-center justify-center text-[8px] font-bold leading-none;
-  height: 12px;
-  width: 12px;
+  @apply flex items-center justify-center text-[10px] font-bold leading-none;
+  height: 14px;
+  width: 14px;
   margin-top: -1px;
   font-family: "Tahoma", sans-serif;
 }
