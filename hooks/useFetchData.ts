@@ -1,6 +1,6 @@
 "use client";
 
-import { fundsData } from "@/lib/data";
+import { fundsData, sellOffData } from "@/lib/data";
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { getPnl, getRoi } from "@/lib/utils";
@@ -139,11 +139,16 @@ export function useFetchData() {
       return pnl;
     }, 0);
 
+    const totalSellPnl = sellOffData.reduce((acc, asset) => {
+      return acc + asset.pnl;
+    }, 0);
+
     // console.log("total current ", {
     //   totalCurrentUSD,
     //   totalPreviousDayUSD,
     //   prevDayPrices,
     //   todayPnl,
+    //   totalSellPnl,
     // });
 
     const totalPnL = getPnl(totalInvestedUSD, totalCurrentUSD);
@@ -156,7 +161,7 @@ export function useFetchData() {
       totalAssets,
       totalInvestedUSD,
       totalCurrentUSD,
-      totalPnL,
+      totalPnL: totalPnL + totalSellPnl,
       totalROI,
       total1DPnL,
       todayPnl,

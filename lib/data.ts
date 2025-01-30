@@ -7,6 +7,7 @@ export interface Asset {
   roi: number;
   category: "HL Listed" | "Pre-bonded" | "Treasury";
   tokenAddress?: string | undefined; //
+  isSold?: boolean;
 }
 
 export interface FundDetails {
@@ -33,10 +34,11 @@ export const fundsData: FundDetails[] = [
       //   quantity: 223820,
       //   initialValue: 10000,
       //   currentValue: 0,
-      //   pnl: 0,
+      //   pnl: -7188,
       //   roi: 0,
       //   category: "HL Listed",
       //   tokenAddress: "0xdb5190bea4b6ab178da0162420c93a73",
+      //   isSold: true,
       // },
       {
         symbol: "USDC",
@@ -83,5 +85,13 @@ export const fundsData: FundDetails[] = [
   {
     name: "Fund 3",
     assets: [],
+  },
+];
+
+export const sellOffData = [
+  {
+    asset: "VAPOR",
+    quantity: 223820,
+    pnl: -7188,
   },
 ];
