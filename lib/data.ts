@@ -67,9 +67,9 @@ export const fundsData: FundDetails[] = [
       },
       {
         symbol: "HEAD (Airdrop)",
-        quantity: 17300,
+        quantity: 17960, // 17960  .. 3.8 1.8
         initialValue: 0,
-        currentValue: 37887,
+        currentValue: 69674,
         pnl: 0,
         roi: 0,
         category: "Pre-bonded",

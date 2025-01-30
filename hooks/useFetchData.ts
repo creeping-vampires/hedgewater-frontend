@@ -51,7 +51,7 @@ export function useFetchData() {
           previousDayPrices[asset.symbol] = results[index]?.prevDayPx;
         });
         preparedData["USDC"] = 1;
-        preparedData["Head (Airdrop)"] = 1;
+        preparedData["HEAD (Airdrop)"] = 3.8;
 
         previousDayPrices["USDC"] = 1;
 
@@ -61,13 +61,13 @@ export function useFetchData() {
 
         preparedData["████ Private Sale"] = 1;
         previousDayPrices["████ Private Sale"] = 1;
-        previousDayPrices["Head (Airdrop)"] = 1;
+        previousDayPrices["HEAD (Airdrop)"] = 1.8;
 
         setData(preparedData);
 
         setPreviousDayPrices(previousDayPrices);
 
-        console.log("data is fetched ", results);
+        // console.log("data is fetched ", results);
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
@@ -131,7 +131,10 @@ export function useFetchData() {
 
       // console.log("pnl ", {
       //   asset: asset.symbol,
+      //   quantity: asset.quantity,
+      //   prices: { prevPrice, currPrice },
       //   pnl,
+      //   currentPnl: currentValue,
       // });
       return pnl;
     }, 0);
