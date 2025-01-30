@@ -8,6 +8,7 @@ import { formatUnits, getPnl, getRoi } from "@/lib/utils";
 import AboutArticle from "@/components/AboutArticle";
 import OurVisionArticle from "@/components/OurVision";
 import Time from "@/components/Time";
+import Link from "next/link";
 
 const returnsData = [
   { date: "1/07", value: -5 },
@@ -230,7 +231,7 @@ export default function Dashboard() {
           }}
         >
           <img
-            style={{ height: 48 }}
+            style={{ height: 40 }}
             className="md:h-16"
             src="/images/dashboard-icon.png"
             alt="Fund Icon"
@@ -243,7 +244,7 @@ export default function Dashboard() {
           onDoubleClick={() => setShowAboutWindow(true)}
         >
           <img
-            style={{ height: 48 }}
+            style={{ height: 40 }}
             className="md:h-16"
             src="/images/about-icon.png"
             alt="About Icon"
@@ -266,10 +267,35 @@ export default function Dashboard() {
 
         <div
           className="desktop-icon"
-          onDoubleClick={() => setShowRecycleBin(true)}
+          onDoubleClick={() =>
+            window.open("https://x.com/HedgewaterDAO", "_blank")
+          }
+        >
+          <img src="/images/x.png" alt="Vision Icon" />
+          <span className="text-center">X</span>
+        </div>
+
+        <div
+          className="desktop-icon"
+          onDoubleClick={() =>
+            window.open("https://gitbook.hedgewater.xyz/", "_blank")
+          }
         >
           <img
             style={{ height: 48 }}
+            className="md:h-16"
+            src="/images/gitbook.svg"
+            alt="Vision Icon"
+          />
+          <span className="text-center">Gitbook</span>
+        </div>
+
+        <div
+          className="desktop-icon"
+          onDoubleClick={() => setShowRecycleBin(true)}
+        >
+          <img
+            style={{ height: 32 }}
             className="md:h-16"
             src="/images/bin-icon.png"
             alt="Recycle Bin"
