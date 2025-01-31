@@ -29,26 +29,41 @@ export function useFetchData() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const promises = fundsData[0].assets
-          .filter((fund) => fund.tokenAddress)
-          .map(async (asset) => {
-            const body = JSON.stringify({
-              type: "tokenDetails",
-              tokenId: asset.tokenAddress,
-            });
-            return axios.post(config.url, body, {
-              headers: config.headers,
-            });
+        const assets: any[] = fundsData[0].assets.filter(
+          (fund) => fund.tokenAddress
+        );
+
+        const promises = assets.map(async (asset) => {
+          const body = JSON.stringify({
+            type: "tokenDetails",
+            tokenId: asset.tokenAddress,
           });
+          return axios.post(config.url, body, {
+            headers: config.headers,
+          });
+        });
 
         const responses = await Promise.all(promises);
         const results = responses.map((response) => response.data);
+        const addressToPrices: any = {};
+        assets.forEach((asset: any, index: number) => {
+          addressToPrices[asset.tokenAddress] = {
+            midPx: results[index].midPx,
+            prevDayPx: results[index].prevDayPx,
+          };
+        });
 
         const preparedData: any = {};
         const previousDayPrices: any = {};
         fundsData[0].assets.forEach((asset, index) => {
-          preparedData[asset.symbol] = results[index]?.midPx;
-          previousDayPrices[asset.symbol] = results[index]?.prevDayPx;
+          if (!asset.tokenAddress) {
+            return;
+          }
+
+          preparedData[asset.symbol] =
+            addressToPrices[asset.tokenAddress].midPx;
+          previousDayPrices[asset.symbol] =
+            addressToPrices[asset.tokenAddress].prevDayPx;
         });
         preparedData["USDC"] = 1;
         preparedData["HEAD (Airdrop)"] = 3.8;
@@ -56,13 +71,14 @@ export function useFetchData() {
         previousDayPrices["USDC"] = 1;
 
         // todo: fix hfun token price in the future
-        preparedData["HWTR"] = 0.1207504;
-        previousDayPrices["HWTR"] = 0.1023;
+        // preparedData["HWTR"] = 0.1207504;
+        // previousDayPrices["HWTR"] = 0.1023;
 
         preparedData["████ Private Sale"] = 1;
         previousDayPrices["████ Private Sale"] = 1;
-        previousDayPrices["HEAD (Airdrop)"] = 1.8;
+        previousDayPrices["HEAD (Airdrop)"] = 3.8;
 
+        // console.log("prices fetched ", preparedData);
         setData(preparedData);
 
         setPreviousDayPrices(previousDayPrices);
@@ -109,22 +125,13 @@ export function useFetchData() {
     }, 0);
 
     const todayPnl = fundsData[0].assets.reduce((acc, asset) => {
-      // if (asset.symbol === "HEAD (Airdrop)") {
-      //   return acc + asset.currentValue;
-      // }
       const prevPrice =
-        asset.symbol === "HWTR"
-          ? 1
-          : prevDayPrices[asset.symbol] === undefined
+        prevDayPrices[asset.symbol] === undefined
           ? 0
           : prevDayPrices[asset.symbol];
 
       const currPrice =
-        asset.symbol === "HWTR"
-          ? 1
-          : data[asset.symbol] === undefined
-          ? 0
-          : data[asset.symbol];
+        data[asset.symbol] === undefined ? 0 : data[asset.symbol];
 
       const currentValue = (currPrice - prevPrice) * asset.quantity;
       const pnl = acc + currentValue;

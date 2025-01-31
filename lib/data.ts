@@ -57,6 +57,7 @@ export const fundsData: FundDetails[] = [
         pnl: 0,
         roi: 0,
         category: "Treasury",
+        tokenAddress: "0xad426cf28a66dc0c8f3b931018ba9845",
       },
       {
         symbol: "████ Private Sale",
