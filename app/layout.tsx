@@ -6,9 +6,17 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "HedgewaterDAO",
-  description: `Hedgewater is an on-chain AI investment fund focused on Hyperliquid ecosystem. 
+  description: `Vision & Mission
+      Hedgewater aims to be the largest on-chain AI investment DAO, commanding a leading share in the Hyperliquid ecosystem. 
+      We intend to
 
-We leverage AI agents to drive both research and execution, ensuring a transparent and data-driven investment approach. Our fund is supported by a team of industry pioneers, who played a key role in shaping the foundations of DeFi, as well as experience investors in liquid markets.`,
+      Invest in scalable, high-potential projects at early stage that consistently outperform usual paradigm in the AI and Web3 space.
+      
+      Leverage the Hyperliquid ecosystem to achieve robust portfolio diversification, liquidity management and maximize returns. 
+      
+      Establish the FIRST decentralized governance model (DAO), empowering hedgewater partners to actively shape our investment strategy and decision-making.
+      
+      Build a Hype concentrated portfolio that holds a portfolio of market share leaders in Hyperliquid ecosystem. `,
   icons: "images/logo.jpeg",
 };
 
