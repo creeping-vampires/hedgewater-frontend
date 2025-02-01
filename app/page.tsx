@@ -9,6 +9,7 @@ import AboutArticle from "@/components/AboutArticle";
 import OurVisionArticle from "@/components/OurVision";
 import Time from "@/components/Time";
 import Link from "next/link";
+import FolderWindow from "@/components/FolderWindow";
 
 const returnsData = [
   { date: "1/07", value: -5 },
@@ -51,6 +52,9 @@ export default function Dashboard() {
   const [selectedFund, setSelectedFund] = useState<FundDetails | null>(null);
   const [openWindows, setOpenWindows] = useState<string[]>(["dashboard"]);
   const [fundWindowMaximized, setFundWindowMaximized] = useState(false);
+
+  const [showFolderWindow, setShowFolderWindow] = useState(false);
+  const [folderWindowMaximized, setFolderWindowMaximized] = useState(false);
 
   const [aboutWindowMaximized, setAboutWindowMaximized] = useState(false);
   const [visionWindowMaximized, setVisionWindowMaximized] = useState(false);
@@ -292,17 +296,34 @@ export default function Dashboard() {
 
         <div
           className="desktop-icon"
-          onDoubleClick={() => setShowRecycleBin(true)}
+          onDoubleClick={() => {
+            setShowFolderWindow(true);
+          }}
         >
           <img
             style={{ height: 32 }}
             className="md:h-16"
-            src="/images/bin-icon.png"
+            src="/images/folder.png"
             alt="Recycle Bin"
           />
-          <span className="text-center">Recycle Bin</span>
+          <span className="text-center">Partners</span>
         </div>
       </div>
+
+      {showFolderWindow && (
+        <div
+          className="window w-full md:w-[970px] h-[calc(100vh-40px)] md:h-auto overflow-auto"
+          style={getWindowStyle("folder")}
+        >
+          <FolderWindow
+            title="My Documents"
+            onClose={() => setShowFolderWindow(false)}
+            onMinimize={() => setShowFolderWindow(false)}
+            onMaximize={() => setFolderWindowMaximized(!folderWindowMaximized)}
+            isMaximized={folderWindowMaximized}
+          />
+        </div>
+      )}
 
       {isWindowOpen && !isMinimized && (
         <div
