@@ -1,32 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import { Monitor } from "lucide-react";
-import { FundDetails, fundsData } from "@/lib/data";
+import {
+  ArrowUp,
+  ChevronLeft,
+  ChevronRight,
+  Folder,
+  Monitor,
+  Search,
+} from "lucide-react";
+import { FundDetails, fundsData, Partner, PartnersList } from "@/lib/data";
 import { useFetchData } from "@/hooks/useFetchData";
 import { formatUnits, getPnl, getRoi } from "@/lib/utils";
 import AboutArticle from "@/components/AboutArticle";
 import OurVisionArticle from "@/components/OurVision";
 import Time from "@/components/Time";
-import Link from "next/link";
-
-const returnsData = [
-  { date: "1/07", value: -5 },
-  { date: "3/07", value: 2 },
-  { date: "5/07", value: 8 },
-  { date: "7/07", value: -3 },
-  { date: "9/07", value: 5 },
-  { date: "11/07", value: -1 },
-];
-
-const equityData = [
-  { date: "1/07", value: -5 },
-  { date: "3/07", value: 2 },
-  { date: "5/07", value: 8 },
-  { date: "7/07", value: -3 },
-  { date: "9/07", value: 5 },
-  { date: "11/07", value: -1 },
-];
 
 interface WindowPosition {
   x: number;
@@ -305,7 +293,7 @@ export default function Dashboard() {
           <span className="text-center">Gitbook</span>
         </div>
 
-        {/* <div
+        <div
           className="desktop-icon"
           onDoubleClick={() => {
             setIsFolderWindowOpen(true);
@@ -315,13 +303,13 @@ export default function Dashboard() {
           }}
         >
           <img
-            style={{ height: 32 }}
+            style={{ height: 40 }}
             className="md:h-16"
-            src="/images/bin-icon.png"
+            src="/images/folder.png"
             alt="Recycle Bin"
           />
           <span className="text-center">Partners</span>
-        </div> */}
+        </div>
       </div>
 
       {isWindowOpen && !isMinimized && (
@@ -649,7 +637,7 @@ export default function Dashboard() {
       {isFolderWindowOpen && !isFolderMinimized && (
         <div
           className={`window w-full md:w-[1024px] h-[calc(100vh-40px)] md:h-auto overflow-auto ${
-            isMaximized ? "maximized" : ""
+            isFolderMaximized ? "maximized" : ""
           }`}
           style={!isFolderMaximized ? getWindowStyle("folder") : undefined}
         >
@@ -659,7 +647,7 @@ export default function Dashboard() {
           >
             <div className="flex items-center gap-2">
               <Monitor size={14} />
-              <span className="text-sm">Fund Dashboard - Active</span>
+              <span className="text-sm">Our Partners - Active</span>
             </div>
             <div className="flex items-center gap-1">
               <button
@@ -687,9 +675,120 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="window-content">
-            <div>Folder UI goes here</div>
+            {/* <div className="flex flex-col h-full"> */}
+            <div className="window-content flex flex-col flex-1">
+              {/* Menu Bar */}
+              <div className="bg-[#ECE9D8] border-b border-[#ACA899] p-1">
+                <div className="flex items-center gap-1 text-xs">
+                  <button className="px-2 py-0.5 hover:bg-[#316AC5] hover:text-white rounded">
+                    File
+                  </button>
+                  <button className="px-2 py-0.5 hover:bg-[#316AC5] hover:text-white rounded">
+                    Edit
+                  </button>
+                  <button className="px-2 py-0.5 hover:bg-[#316AC5] hover:text-white rounded">
+                    View
+                  </button>
+                  <button className="px-2 py-0.5 hover:bg-[#316AC5] hover:text-white rounded">
+                    Tools
+                  </button>
+                  <button className="px-2 py-0.5 hover:bg-[#316AC5] hover:text-white rounded">
+                    Help
+                  </button>
+                </div>
+              </div>
 
-            <div className="grid grid-cols-3 gap-4"></div>
+              {/* Toolbar */}
+              {/* <div className="bg-[#ECE9D8] border-b border-[#ACA899] p-1">
+                  <div className="flex items-center gap-2 px-2">
+                    <button
+                      className="flex items-center gap-1 px-2 py-1 rounded hover:bg-[#e0e0e0] disabled:opacity-50"
+                      disabled
+                    >
+                      <ChevronLeft size={16} />
+                      <span className="text-xs">Back</span>
+                    </button>
+                    <button
+                      className="flex items-center gap-1 px-2 py-1 rounded hover:bg-[#e0e0e0] disabled:opacity-50"
+                      disabled
+                    >
+                      <ChevronRight size={16} />
+                      <span className="text-xs">Forward</span>
+                    </button>
+                    <button className="flex items-center gap-1 px-2 py-1 rounded hover:bg-[#e0e0e0]">
+                      <ArrowUp size={16} />
+                      <span className="text-xs">Up</span>
+                    </button>
+                    <div className="h-4 w-px bg-[#ACA899] mx-2" />
+                    <button className="flex items-center gap-1 px-2 py-1 rounded hover:bg-[#e0e0e0]">
+                      <Search size={16} />
+                      <span className="text-xs">Search</span>
+                    </button>
+                  </div>
+                </div> */}
+
+              {/* Address Bar */}
+              <div className="flex items-center gap-2 p-2 bg-[#ECE9D8] border-b border-[#ACA899]">
+                <span className="text-xs">Address</span>
+                <input
+                  type="text"
+                  className="flex-1 px-2 py-1 text-xs border border-[#7F9DB9] bg-white"
+                  value="C:\Windows\System32"
+                  readOnly
+                />
+              </div>
+
+              {/* Main Content */}
+              <div className="flex flex-1 min-h-0">
+                {/* Left Sidebar */}
+                {/* <div className="w-48 bg-[#ECE9D8] border-r border-[#ACA899] p-2">
+                    <div className="text-xs font-bold mb-2">
+                      File and Folder Tasks
+                    </div>
+                    <div className="space-y-1">
+                      <button className="w-full text-left text-xs px-2 py-1 hover:bg-[#316AC5] hover:text-white rounded">
+                        Make a new folder
+                      </button>
+                      <button className="w-full text-left text-xs px-2 py-1 hover:bg-[#316AC5] hover:text-white rounded">
+                        Publish this folder to the Web
+                      </button>
+                      <button className="w-full text-left text-xs px-2 py-1 hover:bg-[#316AC5] hover:text-white rounded">
+                        Share this folder
+                      </button>
+                    </div>
+                  </div> */}
+
+                {/* Folder Content */}
+                <div className="flex-1 bg-white p-2 overflow-auto">
+                  <div className="grid grid-cols-4 gap-4">
+                    {PartnersList.map((partner: Partner, i) => (
+                      <div
+                        key={i}
+                        className="flex flex-col items-center gap-1 p-2 rounded hover:bg-[#316AC5] hover:text-white cursor-pointer"
+                        onDoubleClick={() => window.open(partner.x, "_blank")}
+                      >
+                        {/* <Folder className="w-8 h-8 text-[#FCD53F]" /> */}
+                        <img
+                          className="h-8 md:h-12"
+                          src={partner.icon}
+                          alt="Fund Icon"
+                        />
+                        <span className="text-xs text-center">
+                          {partner.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Status Bar */}
+              <div className="bg-[#ECE9D8] border-t border-[#ACA899] px-2 py-1 flex justify-between">
+                <span className="text-xs">{PartnersList.length} Partners</span>
+                {/* <span className="text-xs">143 MB available</span> */}
+              </div>
+            </div>
+            {/* </div> */}
           </div>
         </div>
       )}
@@ -929,7 +1028,7 @@ export default function Dashboard() {
                     src="/images/folder.png"
                     alt="Fund Icon"
                   />
-                  <span className="hidden md:inline">Folder</span>
+                  <span className="hidden md:inline">Partners</span>
                 </button>
               );
             } else {

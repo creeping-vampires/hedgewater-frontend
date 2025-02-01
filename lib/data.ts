@@ -96,3 +96,28 @@ export const sellOffData = [
     pnl: -7188,
   },
 ];
+
+export interface Partner {
+  name: string;
+  icon: string;
+  website?: string;
+  x?: string;
+  dexscreener?: string;
+}
+export const PartnersList: Partner[] = [
+  {
+    name: "FLY",
+    icon: "https://pbs.twimg.com/profile_images/1881002725946650624/5jRUF5t8_400x400.jpg",
+    website: "https://hyperfly.sh/",
+    x: "https://x.com/hyperflyai",
+    dexscreener:
+      "https://dexscreener.com/hyperliquid/0xdc64b4798a17b1ce5de41890ec5cc2af",
+  },
+  {
+    name: "HEAD",
+    icon: "https://pbs.twimg.com/profile_images/1872331464773443585/2hjruLgc_400x400.jpg",
+    website: "https://www.headtohead.app/",
+    x: "https://x.com/HeadtoHead_hl",
+    dexscreener: "https://app.hypurr.fun/launch/9219",
+  },
+];
