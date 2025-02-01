@@ -42,6 +42,11 @@ export default function Dashboard() {
   const [isWindowOpen, setIsWindowOpen] = useState(true);
   const [isMaximized, setIsMaximized] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+
+  const [isFolderWindowOpen, setIsFolderWindowOpen] = useState(false);
+  const [isFolderMaximized, setIsFolderMaximized] = useState(false);
+  const [isFolderMinimized, setIsFolderMinimized] = useState(false);
+
   const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
   const [showAboutWindow, setShowAboutWindow] = useState(false);
   const [showVisionWindow, setShowVisionWindow] = useState(false);
@@ -165,9 +170,19 @@ export default function Dashboard() {
     if (isMinimized) setIsMinimized(false);
   };
 
+  const toggleFolderMaximize = () => {
+    setIsFolderMaximized(!isFolderMaximized);
+    if (isFolderMaximized) setIsFolderMinimized(false);
+  };
+
   const toggleMinimize = () => {
     setIsMinimized(!isMinimized);
     if (isMaximized) setIsMaximized(false);
+  };
+
+  const toggleFolderMinimize = () => {
+    setIsFolderMinimized(!isFolderMinimized);
+    if (isFolderMaximized) setIsMaximized(false);
   };
 
   const toggleFundWindowMaximize = () => {
@@ -290,9 +305,14 @@ export default function Dashboard() {
           <span className="text-center">Gitbook</span>
         </div>
 
-        <div
+        {/* <div
           className="desktop-icon"
-          onDoubleClick={() => setShowRecycleBin(true)}
+          onDoubleClick={() => {
+            setIsFolderWindowOpen(true);
+            if (!openWindows.includes("folder")) {
+              setOpenWindows([...openWindows, "folder"]);
+            }
+          }}
         >
           <img
             style={{ height: 32 }}
@@ -300,8 +320,8 @@ export default function Dashboard() {
             src="/images/bin-icon.png"
             alt="Recycle Bin"
           />
-          <span className="text-center">Recycle Bin</span>
-        </div>
+          <span className="text-center">Partners</span>
+        </div> */}
       </div>
 
       {isWindowOpen && !isMinimized && (
@@ -625,6 +645,55 @@ export default function Dashboard() {
           </div>
         )}
 
+      {/* Partners folder window  */}
+      {isFolderWindowOpen && !isFolderMinimized && (
+        <div
+          className={`window w-full md:w-[1024px] h-[calc(100vh-40px)] md:h-auto overflow-auto ${
+            isMaximized ? "maximized" : ""
+          }`}
+          style={!isFolderMaximized ? getWindowStyle("folder") : undefined}
+        >
+          <div
+            className="window-title"
+            onMouseDown={(e) => handleMouseDown("folder", e)}
+          >
+            <div className="flex items-center gap-2">
+              <Monitor size={14} />
+              <span className="text-sm">Fund Dashboard - Active</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <button
+                className="minimize-button"
+                onClick={toggleFolderMinimize}
+              >
+                <span className="window-button-icon">_</span>
+              </button>
+              <button
+                className="maximize-button"
+                onClick={toggleFolderMaximize}
+              >
+                <span className="window-button-icon">□</span>
+              </button>
+              <button
+                className="close-button"
+                onClick={() => {
+                  setIsFolderWindowOpen(false);
+
+                  setOpenWindows(openWindows.filter((w) => w !== "folder"));
+                }}
+              >
+                <span className="window-button-icon">×</span>
+              </button>
+            </div>
+          </div>
+          <div className="window-content">
+            <div>Folder UI goes here</div>
+
+            <div className="grid grid-cols-3 gap-4"></div>
+          </div>
+        </div>
+      )}
+
       {showAboutWindow && (
         <div
           className="window w-full md:w-[970px] h-[calc(100vh-40px)] md:h-auto overflow-auto"
@@ -816,30 +885,55 @@ export default function Dashboard() {
         </button>
 
         <div className="flex-1 overflow-x-auto">
-          {openWindows.map((window) =>
-            window === "dashboard" && isWindowOpen ? (
-              <button
-                key={window}
-                className={`taskbar-item truncate ${
-                  !isMinimized ? "active" : ""
-                }`}
-                onClick={() => {
-                  if (isMinimized) {
-                    setIsMinimized(false);
-                  } else {
-                    setIsMinimized(true);
-                  }
-                }}
-              >
-                <img
-                  className="h-4 md:h-5"
-                  src="/images/dashboard-icon.png"
-                  alt="Fund Icon"
-                />
-                <span className="hidden md:inline">Fund Dashboard</span>
-              </button>
-            ) : (
-              window !== "dashboard" && (
+          {openWindows.map((window) => {
+            if (window === "dashboard" && isWindowOpen) {
+              return (
+                <button
+                  key={window}
+                  className={`taskbar-item truncate ${
+                    !isMinimized ? "active" : ""
+                  }`}
+                  onClick={() => {
+                    if (isMinimized) {
+                      setIsMinimized(false);
+                    } else {
+                      setIsMinimized(true);
+                    }
+                  }}
+                >
+                  <img
+                    className="h-4 md:h-5"
+                    src="/images/dashboard-icon.png"
+                    alt="Fund Icon"
+                  />
+                  <span className="hidden md:inline">Fund Dashboard</span>
+                </button>
+              );
+            } else if (window === "folder" && isFolderWindowOpen) {
+              return (
+                <button
+                  key={window}
+                  className={`taskbar-item truncate ${
+                    !isFolderMinimized ? "active" : ""
+                  }`}
+                  onClick={() => {
+                    if (isFolderMinimized) {
+                      setIsFolderMinimized(false);
+                    } else {
+                      setIsFolderMinimized(true);
+                    }
+                  }}
+                >
+                  <img
+                    className="h-4 md:h-5"
+                    src="/images/folder.png"
+                    alt="Fund Icon"
+                  />
+                  <span className="hidden md:inline">Folder</span>
+                </button>
+              );
+            } else {
+              return (
                 <button
                   key={window}
                   className={`taskbar-item truncate ${
@@ -860,9 +954,9 @@ export default function Dashboard() {
                   <Monitor className="h-4 w-4 md:h-5 md:w-5" />
                   <span className="hidden md:inline">{window}</span>
                 </button>
-              )
-            )
-          )}
+              );
+            }
+          })}
         </div>
 
         <Time />
