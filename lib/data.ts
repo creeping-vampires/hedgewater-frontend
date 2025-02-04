@@ -42,12 +42,22 @@ export const fundsData: FundDetails[] = [
       // },
       {
         symbol: "USDC",
-        quantity: 34712,
-        initialValue: 34712,
-        currentValue: 34712,
+        quantity: 26712,
+        initialValue: 26712,
+        currentValue: 26712,
         pnl: 0,
         roi: 0,
         category: "HL Listed",
+      },
+      {
+        symbol: "HYPE",
+        quantity: 1000,
+        initialValue: 0,
+        currentValue: 0,
+        pnl: 0,
+        roi: 0,
+        category: "HL Listed",
+        tokenAddress: "0x0d01dc56dcaaca66ad901c959b4011ec",
       },
       {
         symbol: "HWTR",
@@ -64,6 +74,15 @@ export const fundsData: FundDetails[] = [
         quantity: 10000,
         initialValue: 10000,
         currentValue: 10000,
+        pnl: 0,
+        roi: 0,
+        category: "Treasury",
+      },
+      {
+        symbol: "HyperSwap Presale",
+        quantity: 8000,
+        initialValue: 8000,
+        currentValue: 8000,
         pnl: 0,
         roi: 0,
         category: "Treasury",
@@ -94,5 +113,30 @@ export const sellOffData = [
     asset: "VAPOR",
     quantity: 223820,
     pnl: -7188,
+  },
+];
+
+export interface Partner {
+  name: string;
+  icon: string;
+  website?: string;
+  x?: string;
+  dexscreener?: string;
+}
+export const PartnersList: Partner[] = [
+  {
+    name: "FLY",
+    icon: "https://pbs.twimg.com/profile_images/1881002725946650624/5jRUF5t8_400x400.jpg",
+    website: "https://hyperfly.sh/",
+    x: "https://x.com/hyperflyai",
+    dexscreener:
+      "https://dexscreener.com/hyperliquid/0xdc64b4798a17b1ce5de41890ec5cc2af",
+  },
+  {
+    name: "HEAD",
+    icon: "https://pbs.twimg.com/profile_images/1872331464773443585/2hjruLgc_400x400.jpg",
+    website: "https://www.headtohead.app/",
+    x: "https://x.com/HeadtoHead_hl",
+    dexscreener: "https://app.hypurr.fun/launch/9219",
   },
 ];
