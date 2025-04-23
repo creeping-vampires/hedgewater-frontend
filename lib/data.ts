@@ -42,9 +42,9 @@ export const fundsData: FundDetails[] = [
       // },
       {
         symbol: "USDC",
-        quantity: 24338,
-        initialValue: 24338,
-        currentValue: 24338,
+        quantity: 34350,
+        initialValue: 34350,
+        currentValue: 34350,
         pnl: 0,
         roi: 0,
         category: "HL Listed",
