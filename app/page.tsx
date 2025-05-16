@@ -501,112 +501,125 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {["HL Listed", "Pre-bonded", "Treasury"].map((category) => (
-                <div key={category} className="mb-4 md:mb-6">
-                  <h3 className="text-sm font-semibold mb-2 px-2 py-1 bg-[#d4d0c8] border border-[#848484]">
-                    {category}
-                  </h3>
-                  <div className="overflow-x-auto">
-                    <div className="table-container min-w-[600px]">
-                      <table className="w-full">
-                        <thead>
-                          <tr>
-                            <th className="table-header text-xs md:text-sm">
-                              ASSET
-                            </th>
-                            <th className="table-header text-xs md:text-sm">
-                              QUANTITY
-                            </th>
-                            <th className="table-header text-xs md:text-sm">
-                              INITIAL VALUE
-                            </th>
-                            <th className="table-header text-xs md:text-sm">
-                              CURRENT VALUE
-                            </th>
-                            <th className="table-header text-xs md:text-sm">
-                              PNL
-                            </th>
-                            <th className="table-header text-xs md:text-sm">
-                              ROI
-                            </th>
-                          </tr>
-                        </thead>
-                        {selectedFund.assets.filter(
-                          (asset) => asset.category === category
-                        ).length === 0 && (
-                          <tbody>
+              {["HL Listed", "Pre-bonded", "Treasury"].map((category) => {
+                // Skip rendering the Pre-bonded section if there are no assets in that category
+                if (
+                  category === "Pre-bonded" &&
+                  !selectedFund.assets.some(
+                    (asset) => asset.category === "Pre-bonded"
+                  )
+                ) {
+                  return null;
+                }
+
+                return (
+                  <div key={category} className="mb-4 md:mb-6">
+                    <h3 className="text-sm font-semibold mb-2 px-2 py-1 bg-[#d4d0c8] border border-[#848484]">
+                      {category}
+                    </h3>
+                    <div className="overflow-x-auto">
+                      <div className="table-container min-w-[600px]">
+                        <table className="w-full">
+                          <thead>
                             <tr>
-                              <td colSpan={6}>
-                                <h3 className="text-sm text-center font-semibold py-4">
-                                  No assets
-                                </h3>
-                              </td>
+                              <th className="table-header text-xs md:text-sm">
+                                ASSET
+                              </th>
+                              <th className="table-header text-xs md:text-sm">
+                                QUANTITY
+                              </th>
+                              <th className="table-header text-xs md:text-sm">
+                                INITIAL VALUE
+                              </th>
+                              <th className="table-header text-xs md:text-sm">
+                                CURRENT VALUE
+                              </th>
+                              <th className="table-header text-xs md:text-sm">
+                                PNL
+                              </th>
+                              <th className="table-header text-xs md:text-sm">
+                                ROI
+                              </th>
                             </tr>
+                          </thead>
+                          {selectedFund.assets.filter(
+                            (asset) => asset.category === category
+                          ).length === 0 && (
+                            <tbody>
+                              <tr>
+                                <td colSpan={6}>
+                                  <h3 className="text-sm text-center font-semibold py-4">
+                                    No assets
+                                  </h3>
+                                </td>
+                              </tr>
+                            </tbody>
+                          )}
+                          <tbody>
+                            {selectedFund.assets
+                              .filter((asset) => asset.category === category)
+                              .map((asset) => {
+                                const currentValue =
+                                  asset.currentValue > 0
+                                    ? asset.currentValue
+                                    : assetPrices?.[asset.symbol] === undefined
+                                    ? 0
+                                    : asset.quantity *
+                                      assetPrices[asset.symbol];
+
+                                const pnl = getPnl(
+                                  asset.initialValue,
+                                  currentValue
+                                );
+                                const roi = getRoi(
+                                  asset.initialValue,
+                                  currentValue
+                                );
+
+                                return (
+                                  <tr key={asset.symbol}>
+                                    <td className="table-cell text-xs md:text-sm">
+                                      {asset.symbol}
+                                    </td>
+                                    <td className="table-cell text-xs md:text-sm">
+                                      {asset.quantity.toLocaleString()}
+                                    </td>
+                                    <td className="table-cell text-xs md:text-sm">
+                                      {formatCurrency(asset.initialValue)}
+                                    </td>
+                                    <td className="table-cell text-xs md:text-sm">
+                                      {formatCurrency(currentValue)}
+                                    </td>
+                                    <td
+                                      className={`table-cell text-xs md:text-sm ${
+                                        pnl >= 0
+                                          ? "text-green-500"
+                                          : "text-red-500"
+                                      }`}
+                                    >
+                                      {pnl >= 0 ? "+" : ""}
+                                      {formatCurrency(pnl)}
+                                    </td>
+                                    <td
+                                      className={`table-cell text-xs md:text-sm ${
+                                        roi >= 0
+                                          ? "text-green-500"
+                                          : "text-red-500"
+                                      }`}
+                                    >
+                                      {roi >= 0 ? "+" : ""}
+                                      {roi.toFixed(2)}%
+                                    </td>
+                                  </tr>
+                                );
+                              })}
                           </tbody>
-                        )}
-                        <tbody>
-                          {selectedFund.assets
-                            .filter((asset) => asset.category === category)
-                            .map((asset) => {
-                              const currentValue =
-                                asset.currentValue > 0
-                                  ? asset.currentValue
-                                  : assetPrices?.[asset.symbol] === undefined
-                                  ? 0
-                                  : asset.quantity * assetPrices[asset.symbol];
-
-                              const pnl = getPnl(
-                                asset.initialValue,
-                                currentValue
-                              );
-                              const roi = getRoi(
-                                asset.initialValue,
-                                currentValue
-                              );
-
-                              return (
-                                <tr key={asset.symbol}>
-                                  <td className="table-cell text-xs md:text-sm">
-                                    {asset.symbol}
-                                  </td>
-                                  <td className="table-cell text-xs md:text-sm">
-                                    {asset.quantity.toLocaleString()}
-                                  </td>
-                                  <td className="table-cell text-xs md:text-sm">
-                                    {formatCurrency(asset.initialValue)}
-                                  </td>
-                                  <td className="table-cell text-xs md:text-sm">
-                                    {formatCurrency(currentValue)}
-                                  </td>
-                                  <td
-                                    className={`table-cell text-xs md:text-sm ${
-                                      pnl >= 0
-                                        ? "text-green-500"
-                                        : "text-red-500"
-                                    }`}
-                                  >
-                                    {pnl >= 0 ? "+" : ""}
-                                    {formatCurrency(pnl)}
-                                  </td>
-                                  <td
-                                    className={`table-cell text-xs md:text-sm ${
-                                      roi >= 0
-                                        ? "text-green-500"
-                                        : "text-red-500"
-                                    }`}
-                                  >
-                                    {roi >= 0 ? "+" : ""}
-                                    {roi.toFixed(2)}%
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                        </tbody>
-                      </table>
+                        </table>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
 
               <div className="mt-4 md:mt-6 px-2">
                 <h3 className="text-xs md:text-sm font-semibold mb-1">

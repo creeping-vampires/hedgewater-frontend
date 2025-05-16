@@ -42,9 +42,9 @@ export const fundsData: FundDetails[] = [
       // },
       {
         symbol: "USDC",
-        quantity: 34350,
-        initialValue: 34350,
-        currentValue: 34350,
+        quantity: 34200,
+        initialValue: 34200,
+        currentValue: 34200,
         pnl: 0,
         roi: 0,
         category: "HL Listed",
@@ -69,6 +69,16 @@ export const fundsData: FundDetails[] = [
         category: "Treasury",
         tokenAddress: "0xad426cf28a66dc0c8f3b931018ba9845",
       },
+      {
+        symbol: "Liminal USDC",
+        quantity: 5000,
+        initialValue: 5000,
+        currentValue: 5000,
+        pnl: 0,
+        roi: 0,
+        category: "Treasury",
+        tokenAddress: "0xad426cf28a66dc0c8f3b931018ba9845",
+      },
       // {
       //   symbol: "████ Private Sale",
       //   quantity: 10000,
@@ -87,15 +97,15 @@ export const fundsData: FundDetails[] = [
         roi: 0,
         category: "Treasury",
       },
-      {
-        symbol: "HEAD (Airdrop)",
-        quantity: 9791, // 17960  .. 3.8 1.8
-        initialValue: 0,
-        currentValue: 37205,
-        pnl: 0,
-        roi: 0,
-        category: "Pre-bonded",
-      },
+      // {
+      //   symbol: "HEAD (Airdrop)",
+      //   quantity: 9791, // 17960  .. 3.8 1.8
+      //   initialValue: 0,
+      //   currentValue: 37205,
+      //   pnl: 0,
+      //   roi: 0,
+      //   category: "Pre-bonded",
+      // },
     ],
   },
   {
