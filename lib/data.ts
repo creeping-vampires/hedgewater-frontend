@@ -62,7 +62,7 @@ export const fundsData: FundDetails[] = [
       {
         symbol: "PIP",
         quantity: 761.95,
-        initialValue: 761.95,
+        initialValue: 14027,
         currentValue: 0,
         pnl: 0,
         roi: 0,
@@ -72,7 +72,7 @@ export const fundsData: FundDetails[] = [
       {
         symbol: "CATBAL",
         quantity: 689.33,
-        initialValue: 689.33,
+        initialValue: 5409,
         currentValue: 0,
         pnl: 0,
         roi: 0,
